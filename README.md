@@ -63,6 +63,8 @@ If with is an array it is splatted into the invocation, as becomes obvious in th
            with: [ /[,.]\b/, '\& ' ]
 ```
 
+#### Passing One Array
+
 If a real array shall be passed in as one parameter it can be wrapped into an array of one element,
 or the `with_ary:` keyword parameter can be used.
 
@@ -72,6 +74,8 @@ Example:
   forward :append_suffix, to: :@ary, as: :concat, with: [%w{ my suffix }]
   forward :append_suffix, to: :@ary, as: :concat, with_ary: %w{ my suffix }
 ```
+
+#### Passing A Block
 
 In case of the necessity to provide a block to the forwarded invocation, it can be specified as the
 block parameter of the `forward` invocation itself.
@@ -83,8 +87,7 @@ The following example uses inject to compute a sum of elements
 ```
 
 Please note however that common patterns like this one can benefit of the provided
-helpers, in our case it is Integer.sum. As we do not want to be intrusive the helpers
-have to be requested explicitly.
+helpers, in our case it is Integer.sum.
 
 ```ruby
 require 'forwarder/helpers/integer/sum'
@@ -95,8 +98,24 @@ require 'forwarder/helpers/integer/sum'
 ...
 ```
 
-Two things are noteworthy in this example. 
+Accounting for different tastes a block can be provided as a block parameter or 
+as a `lambda` to the `with_block:` keyword parameter. The later is taking preference
+over the former, which no defined usage of the block in this case (at least for
+the time being).
 
-In order to provide maximal granularity for helpers, each helper can be required by
-itself `require 'forwarder/helpers/integer/sum'`, by group `require 'forwarder/helpers/integer'`,
-or all together `require 'forwarder/helpers'`
+#### Selective Helpers
+
+As we do not want to be intrusive the helpers
+have to be requested explicitly.
+
+This can be done in three levels of granularity:
+
+* Per helper
+ `require 'forwarder/helpers/integer/sum'
+
+* All helpers
+`require 'forwarder/helpers'`,
+
+* Per monkey patched class
+`require 'forwarder/helpers/integer'`,
+
