@@ -20,12 +20,24 @@ forward <a_message>, to: <target>
 forward <a_message>, to: <target>, as: <translation>
 ```
 
-These two forms of the `forward` method, (and *only* these two forms) are directly translated to the
-`def_delegator` method of `Forwardable`.
+These two forms of the `forward` method, (and *only* these two forms) are directly implemented with
+`def_delegator` method of `Forwardable`, as follows:
 
 ```ruby
 def_delegator <target> <a_message>
 def_delegator <translation> <a_message>
+```
+
+Furthermore the `forward_all` method is translated to the `def_delegators` method in the following form,
+thusly
+
+```ruby
+forward_all msg1, msg2, msg3, ..., to: target
+```
+is implemented as 
+
+```ruby
+def_delegators target, msg1, msg2, msg3, ...
 ```
 
 ## Additional Features
@@ -112,13 +124,16 @@ This can be done in three levels of granularity:
 
 * Per helper
 
-`require 'forwarder/helpers/integer/sum'
+`require 'forwarder/helpers/integer/sum'`
 
 * All helpers
 
-`require 'forwarder/helpers'`,
+`require 'forwarder/helpers'`
 
 * Per monkey patched class
 
-`require 'forwarder/helpers/integer'`,
+`require 'forwarder/helpers/integer'`
 
+### Custom And Chained Targets
+
+#### Custom Targets
