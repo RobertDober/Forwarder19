@@ -67,6 +67,7 @@ If a real array shall be passed in as one parameter it can be wrapped into an ar
 or the `with_ary:` keyword parameter can be used.
 
 Example:
+
 ```ruby
   forward :append_suffix, to: :@ary, as: :concat, with: [%w{ my suffix }]
   forward :append_suffix, to: :@ary, as: :concat, with_ary: %w{ my suffix }
