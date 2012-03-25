@@ -284,3 +284,29 @@ of functional calls by passing in `{|x| x.identity}`, `sendmsg(:identity)` or ev
 hated `&:identity` is a recurring pattern. 
 
 **Warning:** I will become evangelic now.
+
+I do not like the `Symbol#to_proc` kludge, and that for two reasons. The first is pragamatic.
+You cannot pass parameters, and that sucks. Why can I express `map(&:succ)` but not `map(&:+, 2)`.
+Well the answer is clear, Ruby's syntax does not support it.
+
+The second reason is on philosophical grounds. It feels wrong that Symbol shall be responsable
+of transforming itself into a lambda.
+
+Thus I created a helper in Kernel that takes the responsability, and doing so
+with a clear name, expressing intent. This helper is `Kernel#sendmsg`.
+
+
+```ruby
+  map do |x|
+   x.hello "World"
+  end
+```
+
+is the same as
+
+
+```ruby
+  map( &sendmsg( :hello, "World") )
+```
+
+
