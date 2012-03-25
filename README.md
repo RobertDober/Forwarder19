@@ -1,6 +1,6 @@
 # Forwarder19
 
-This implementation is for, and needs Ruby 1.9.2 or later. For Ruby 1.8.7 please see https://github.com/RobertDober/Forwarder.
+This implementation is for, and needs, Ruby 1.9.2 or later. For Ruby 1.8.7 please see https://github.com/RobertDober/Forwarder.
 
 ## Abstract
 
@@ -40,14 +40,15 @@ is implemented as
 def_delegators target, msg1, msg2, msg3, ...
 ```
 
-## Additional Features
+### Additional Features
 
 * Parameters (partial or total application)
 * Custom And Chained Targets
 * AOP Filters
+* Helpers
 
 
-### Parameters
+## Parameters
 
 Assuming a class `ArrayWrapper` and that their instances wrap the array object via the instance variable
 `@ary` the Smalltalk method `second` can be implemented as follows.
@@ -75,7 +76,7 @@ If with is an array it is splatted into the invocation, as becomes obvious in th
            with: [ /[,.]\b/, '\& ' ]
 ```
 
-#### Passing One Array
+### Passing One Array
 
 If a real array shall be passed in as one parameter it can be wrapped into an array of one element,
 or the `with_ary:` keyword parameter can be used.
@@ -87,7 +88,7 @@ Example:
   forward :append_suffix, to: :@ary, as: :concat, with_ary: %w{ my suffix }
 ```
 
-#### Passing A Block
+### Passing A Block
 
 In case of the necessity to provide a block to the forwarded invocation, it can be specified as the
 block parameter of the `forward` invocation itself.
@@ -115,7 +116,7 @@ as a `lambda` to the `with_block:` keyword parameter. The later is taking prefer
 over the former, which no defined usage of the block in this case (at least for
 the time being).
 
-#### Selective Helpers
+### Selective Helpers
 
 As we do not want to be intrusive the helpers
 have to be requested explicitly.
@@ -134,13 +135,13 @@ This can be done in three levels of granularity:
 
 `require 'forwarder/helpers/integer'`
 
-### Custom And Chained Targets
+## Custom And Chained Targets
 
 So far the `to:` keyword was followed by a symbol or string denoting a _symbolic receiver_, that is
 an instance_variable or method with the denoted name. Custom and Chain Targets are implementing a
 different story.
 
-#### Custom Targets
+### Custom Targets
 
 Allow the user to define a target that cannot be expressed as a _symbolic receiver_.
 
@@ -189,7 +190,7 @@ class Array
   forward :second, to: :identity, as: :[], with: 1
 ```
 
-##### Custom Targets And Closures
+#### Custom Targets And Closures
 
 Another application of custom targets would be to hide a enclosed object, but as in the first
 example above, such an object cannot be defined on instance level, but only on class level.
@@ -205,7 +206,7 @@ could easily implement an instance count for a class as follows:
 
 ```
 
-#### Chain Targets
+### Chain Targets
 
 Chain Targets are expressed with the `to_chain:` keyword parameter. It simply is a chain of
 _symbolic receivers_, that will resolve to the final target. Given the following example
@@ -222,3 +223,24 @@ the forward would implement the following method
     @content.children.size
   end
 ```
+
+## AOP Filters
+
+Before and After filters are implemented in this version, with the respective `before:` and
+`after:` keyword parameter. Both need lambdas as paramters, but by specifying the `:use_block`
+value the block parameter of the `forward` method can be _abused_ for this purpose.
+
+The following examples all operate on a class wrapping a hash instance via the `hash` attribute
+reader. Our first goal is to implement a `max_value` method, that will return the maxium value
+of all values for given keys. The following three examples all achieve this goal:
+
+
+```ruby
+  forward :max_value, to: :hash, as: :values_at, after: lambda{ |x| x.max }
+  forward :max_value, to: :hash, as: :values_at, after: :use_block do | x | x.max end
+  require 'forwarder/helpers/kernel/sendmsg'
+  forward :max_value, to: :hash, as: :values_at, after: sendmsg( :max )
+```
+
+N.B. The `Kernel#sendmsg` method is my reply to the hated - by me that is at least - `Symbol#to_proc` kludge and its
+limitations, I will talk about it more in the Helpers section.
