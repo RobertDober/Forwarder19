@@ -17,4 +17,8 @@ It also defines after and before filters.  and some more sophisticated use cases
 ```ruby
 
 forward <a_message>, to: <target>
+forward <a_message>, to: <target>, as: <translation>
 ```
+
+These two forms of the `forward` method, (and *only* these two forms) are directly translated to the
+`def\_delegator` method of `Forwardable`.
