@@ -111,11 +111,14 @@ have to be requested explicitly.
 This can be done in three levels of granularity:
 
 * Per helper
- `require 'forwarder/helpers/integer/sum'
+
+`require 'forwarder/helpers/integer/sum'
 
 * All helpers
+
 `require 'forwarder/helpers'`,
 
 * Per monkey patched class
+
 `require 'forwarder/helpers/integer'`,
 
