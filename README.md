@@ -137,3 +137,52 @@ This can be done in three levels of granularity:
 ### Custom And Chained Targets
 
 #### Custom Targets
+
+
+allow the user to define a target that cannot be expressed as an instance variable or the result
+of a method invocation on the receiving instance.
+
+Custom targets are expressed by the means of the `to_object:` keyword parameter.
+
+
+I want to give two examples here, the first
+using `self`, which evaluates to the module in which `forward` is invoked of course, and might
+thus be used to forward to class instance methods, as in the following example:
+
+```ruby
+class Callback
+  def self.instances; @__instances__ ||= [] end
+    
+  def self.register an_instance
+    instances << an_instance
+  end
+
+  extend Forwarder
+  forward :register, to_object: self
+
+  def initialize
+    register self
+  end
+end
+```
+
+The second example is a forward to the instance itself, for that purpose the symbol :self
+can be used. The followin is, again, an implementation of Smalltalk's `second` method. But
+here we are defining it on `Array` itself, not a wrapper.
+
+
+```ruby
+class Array
+  extend Forwarder
+  forward :second, to_object: :self, as: :[], with: 1
+```
+
+However the same could be accomplished by using the object/identity helper and the default
+target implementation.
+
+```ruby
+require 'forwarder/helpers/object/identity'
+class Array
+  extend Forwarder
+  forward :second, to: :identity, as: :[], with: 1
+```
