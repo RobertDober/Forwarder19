@@ -3,11 +3,12 @@ require 'forwarder/version'
 Gem::Specification.new do |s|
   s.name        = 'forwarder19'
   s.version     = Forwarder::VERSION 
-  s.summary     = "Making Delegation finally readable"
+  s.summary     = "Delegation And AOP Filters For It"
   s.description = %{Ruby's core Forwardable gets the job done(barely) and produces most unreadable code.
-    This is a nonintrusive (as is Forwardable) module that allos to delegate methods to instance variables,
-    objects returned by instance_methods, other methods of the same receiver (method_alias on steroids)
-    and some more sophisticated use cases}
+This is a nonintrusive (as is Forwardable) module that allows to delegate methods to instance variables,
+objects returned by instance_methods, other methods of the same receiver, the receiver itself, a chain of messages or
+an arbitrary object. Paramters can be provided in the forwarding definition (parially or totally=.
+It also defines after and before filters.  and some more sophisticated use cases}
   s.authors     = ["Robert Dober"]
   s.email       = 'robert.dober@gmail.com'
   s.files       = Dir.glob("lib/**/*.rb")
