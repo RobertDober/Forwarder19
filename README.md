@@ -21,4 +21,30 @@ forward <a_message>, to: <target>, as: <translation>
 ```
 
 These two forms of the `forward` method, (and *only* these two forms) are directly translated to the
-`def\_delegator` method of `Forwardable`.
+`def_delegator` method of `Forwardable`.
+
+```ruby
+def_delegator <target> <a_message>
+def_delegator <translation> <a_message>
+```
+
+## Additional Features
+
+* Parameters (partial or total application)
+* Custom And Chained Targets
+* AOP Filters
+
+
+### Parameters
+
+Assuming a class `ArrayWrapper` and that their instances wrap the array object via the instance variable
+`@ary` the Smalltalk method `second` can be implemented as follows.
+
+```ruby
+require 'forwarder'
+class ArrayWrapper
+  extend Forwarder
+  forward :second, to: :@ary, as: :[], with: 1
+  ...
+end
+```
