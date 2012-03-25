@@ -48,3 +48,54 @@ class ArrayWrapper
   ...
 end
 ```
+
+The `with` keyword paramter is thus used to provide the first slice of arguments that will be provided
+to the forwarded invocation. This slice will be extended by the actual parameters of the invocation
+of the proxy method (e.g. the instance method defined by the `forward` method itself).
+
+If with is an array it is splatted into the invocation, as becomes obvious in this example.
+
+```ruby
+
+   forward :add_whitespace_to_punctuation,
+           to:   :name,
+           as:   :gsub!,
+           with: [ /[,.]\b/, '\& ' ]
+```
+
+If a real array shall be passed in as one parameter it can be wrapped into an array of one element,
+or the `with_ary:` keyword parameter can be used.
+
+Example:
+```ruby
+  forward :append_suffix, to: :@ary, as: :concat, with: [%w{ my suffix }]
+  forward :append_suffix, to: :@ary, as: :concat, with_ary: %w{ my suffix }
+```
+
+In case of the necessity to provide a block to the forwarded invocation, it can be specified as the
+block parameter of the `forward` invocation itself.
+
+The following example uses inject to compute a sum of elements
+
+```ruby
+  forward :sum, to: :elements, as: :inject do |s,e| s+e end
+```
+
+Please note however that common patterns like this one can benefit of the provided
+helpers, in our case it is Integer.sum. As we do not want to be intrusive the helpers
+have to be requested explicitly.
+
+```ruby
+require 'forwarder/helpers/integer/sum'
+...
+  forward :sum, to: :elements, as: :inject, &Integer.sum
+# or
+  forward :sum, to: :elements, as: :inject, with_block: Integer.sum
+...
+```
+
+Two things are noteworthy in this example. 
+
+In order to provide maximal granularity for helpers, each helper can be required by
+itself `require 'forwarder/helpers/integer/sum'`, by group `require 'forwarder/helpers/integer'`,
+or all together `require 'forwarder/helpers'`
