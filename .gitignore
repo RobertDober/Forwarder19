@@ -1,0 +1,4 @@
+*.vim
+*.gem
+.rspec
+open-project.zsh
