@@ -136,11 +136,13 @@ This can be done in three levels of granularity:
 
 ### Custom And Chained Targets
 
+So far the `to:` keyword was followed by a symbol or string denoting a _symbolic receiver_, that is
+an instance_variable or method with the denoted name. Custom and Chain Targets are implementing a
+different story.
+
 #### Custom Targets
 
-
-allow the user to define a target that cannot be expressed as an instance variable or the result
-of a method invocation on the receiving instance.
+Allow the user to define a target that cannot be expressed as a _symbolic receiver_.
 
 Custom targets are expressed by the means of the `to_object:` keyword parameter.
 
@@ -206,7 +208,7 @@ could easily implement an instance count for a class as follows:
 #### Chain Targets
 
 Chain Targets are expressed with the `to_chain:` keyword parameter. It simply is a chain of
-symbolic receivers, that will resolve to the final target. Given the following example
+_symbolic receivers_, that will resolve to the final target. Given the following example
 
 
 ```ruby
