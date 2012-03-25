@@ -297,8 +297,8 @@ with a clear name, expressing intent. This helper is `Kernel#sendmsg`.
 
 
 ```ruby
-  map do |x|
-   x.hello "World"
+  map do |ele|
+   ele.hello "World"
   end
 ```
 
@@ -309,4 +309,20 @@ is the same as
   map( &sendmsg( :hello, "World") )
 ```
 
+Mapping with a `Symbol` might not only be conveniently expressed as sending a message to each
+element, sometimes a different meaning might be appropriate as in the example below:
+
+
+```ruby
+  map do | ele |
+    some_method ele
+  end
+```
+
+A different helper can do this job without any ambiguity:
+
+
+```ruby
+  map( &applyto( :some_method ) )
+```
 
