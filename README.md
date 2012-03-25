@@ -186,3 +186,37 @@ class Array
   extend Forwarder
   forward :second, to: :identity, as: :[], with: 1
 ```
+
+##### Custom Targets And Closures
+
+Another application of custom targets would be to hide a enclosed object, but as in the first
+example above, such an object cannot be defined on instance level, but only on class level.
+Assuming that the class itself does not need access to the object enclosed by the closure, one
+could easily implement an instance count for a class as follows:
+
+
+```ruby
+
+  container = []
+  forward :register, to_object: container, as: :<<, with: :sentinel
+  forward :instance_count, to_object: container, as: :size
+
+```
+
+#### Chain Targets
+
+Chain Targets are expressed with the `to_chain:` keyword parameter. It simply is a chain of
+symbolic receivers, that will resolve to the final target. Given the following example
+
+
+```ruby
+  forward :size, to_chain: %w{@content children}
+```
+
+the forward would implement the following method
+
+```ruby
+  def size
+    @content.children.size
+  end
+```
