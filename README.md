@@ -226,21 +226,61 @@ the forward would implement the following method
 
 ## AOP Filters
 
-Before and After filters are implemented in this version, with the respective `before:` and
-`after:` keyword parameter. Both need lambdas as paramters, but by specifying the `:use_block`
+Before and After filters are implemented in this version.
+
+The respective `before:` and
+`after:` keyword parameters expect lambdas as paramters, but by specifying the `:use_block`
 value the block parameter of the `forward` method can be _abused_ for this purpose.
 
 The following examples all operate on a class wrapping a hash instance via the `hash` attribute
 reader. Our first goal is to implement a `max_value` method, that will return the maxium value
-of all values for given keys. The following three examples all achieve this goal:
+of all values for given keys.
+
+### After Filter
+
+The lambda provided by `after:` is applied to the return value of the forwarded invocation.
+The following three examples all implement the `max_value` method correctly.
 
 
 ```ruby
   forward :max_value, to: :hash, as: :values_at, after: lambda{ |x| x.max }
-  forward :max_value, to: :hash, as: :values_at, after: :use_block do | x | x.max end
+  forward :max_value, to: :hash, as: :values_at, after: :use_block do | x | 
+    x.max 
+  end
   require 'forwarder/helpers/kernel/sendmsg'
   forward :max_value, to: :hash, as: :values_at, after: sendmsg( :max )
 ```
 
 N.B. The `Kernel#sendmsg` method is my reply to the hated - by me that is at least - `Symbol#to_proc` kludge and its
 limitations, I will talk about it more in the Helpers section.
+
+### Before Filter.
+
+Our next goal is to implement a method `value_of_max` that returns the value for the greatest of
+all provided keys.
+
+For this we will use a before filter, its lambda is applied to the arguments
+of the implemented forwarder and the result will be passed in to the forwarded invocation. The pass in
+will use a splash if appropriate.
+
+
+```ruby
+  forward :value_of_max, to: :hash, as: :[], before: lambda{ |*args| args.max }
+  require 'forwarder/helpers/kernel/sendmsg'
+  forward :value_of_max, to: :hash, as: :[], before: sendmsg( :max )
+```
+
+## Helpers
+
+Helpers define two type of methods. Firstly methods that return lambdas for frequently used
+block patterns, e.g. `Integer.sum`. Secondly methods that are convenient to use inside `forward`
+invocations, but not necessarily only there, e.g. `Kernel#sendmsg` or `Object#identity`.
+
+### Functional Helpers
+
+I see this second group, as small as it is, as an important enhancement for the functional
+programming style. The possibilty to nullify a block that is necessarily used in a chain
+of functional calls by passing in `{|x| x.identity}`, `sendmsg(:identity)` or even the 
+hated `&:identity` is a recurring pattern. 
+
+**Warning:** I will become evangelic now.
