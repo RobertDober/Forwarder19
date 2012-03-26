@@ -50,6 +50,9 @@ def_delegators target, msg1, msg2, msg3, ...
 
 ## Parameters
 
+
+### Passing One Parameter
+
 Assuming a class `ArrayWrapper` and that their instances wrap the array object via the instance variable
 `@ary` the Smalltalk method `second` can be implemented as follows.
 
@@ -66,7 +69,10 @@ The `with` keyword paramter is thus used to provide the first slice of arguments
 to the forwarded invocation. This slice will be extended by the actual parameters of the invocation
 of the proxy method (e.g. the instance method defined by the `forward` method itself).
 
-If with is an array it is splatted into the invocation, as becomes obvious in this example.
+### Passing More Parameters
+
+If `with:` is passed an array, it is splatted into the invocation, thus allowing us to pass more than
+one parameter. This becomes clearer with an example.
 
 ```ruby
 
@@ -74,6 +80,35 @@ If with is an array it is splatted into the invocation, as becomes obvious in th
            to:   :name,
            as:   :gsub!,
            with: [ /[,.]\b/, '\& ' ]
+```
+
+### Partial Application
+
+This example gives us the oppurtunity to look at a use case for partial applications. Let us assume that
+we do not always use whitespaces, than we can leave the second paramter to be provided by the invocation
+of the defined forwarder proxy.
+
+```ruby
+   forward :add_whitespace_to_punctuation,
+           to:   :name,
+           as:   :gsub!,
+           with: /[,.]\b/
+```
+
+We can achieve the same as above with the following invocation
+
+```ruby
+  o = Name.new( "the,quick, fox." )
+  o.add_whitespace_to_punctuation( '\1 ' )
+  # name: "the, quick, fox." )
+```
+
+but we can also add a hyphen after interpunctations with this invocation 
+
+```ruby
+  o = Name.new( "the,quick, fox." )
+  o.add_whitespace_to_punctuation( '\1- ' )
+  # name: "the,- quick,- fox." )
 ```
 
 ### Passing One Array
@@ -105,7 +140,7 @@ helpers, in our case it is Integer.sum.
 ```ruby
 require 'forwarder/helpers/integer/sum'
 ...
-  forward :sum, to: :elements, as: :inject, &Integer.sum
+  forward :sum, to: :elements, as: :inject &Integer.sum
 # or
   forward :sum, to: :elements, as: :inject, with_block: Integer.sum
 ...
