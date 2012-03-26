@@ -176,6 +176,25 @@ So far the `to:` keyword was followed by a symbol or string denoting a _symbolic
 an instance_variable or method with the denoted name. Custom and Chain Targets are implementing a
 different story.
 
+### Chain Targets
+
+Chain Targets are also expressed with the `to:` keyword parameter, but by passing an array of _symbolic receivers_.
+This array will resolve to the final target by sending each message to the result of the preceding message. 
+The following example should make this clearer:
+
+
+```ruby
+  forward :size, to: %w{@content children}
+```
+
+which could have been implemented by hand as follows:
+
+```ruby
+  def size
+    @content.children.size
+  end
+```
+
 ### Custom Targets
 
 Allow the user to define a target that cannot be expressed as a _symbolic receiver_.
@@ -201,6 +220,23 @@ class Callback
   def initialize
     register self
   end
+end
+```
+
+But when looking closely one can see that the `self.register` method is just another delegation, thus the whole code
+can be rewritten even more concesily as:
+
+```ruby
+class Callback
+  class << self
+    extend Forwarder
+    forward :<<, to: :instances
+  
+    def instances; @__instances__ ||= [] end
+  end
+
+  extend Forwarder
+  forward :register, to_object: self, as: :<<
 end
 ```
 
@@ -239,24 +275,6 @@ could easily implement an instance count for a class as follows:
   forward :register, to_object: container, as: :<<, with: :sentinel
   forward :instance_count, to_object: container, as: :size
 
-```
-
-### Chain Targets
-
-Chain Targets are expressed with the `to_chain:` keyword parameter. It simply is a chain of
-_symbolic receivers_, that will resolve to the final target. Given the following example
-
-
-```ruby
-  forward :size, to_chain: %w{@content children}
-```
-
-the forward would implement the following method
-
-```ruby
-  def size
-    @content.children.size
-  end
 ```
 
 ## AOP Filters
@@ -343,6 +361,18 @@ is the same as
 ```ruby
   map( &sendmsg( :hello, "World") )
 ```
+
+Furthermore it might be usuful to keep the returned `lambda` around, please compare
+
+```ruby
+  adder = sendmsg( :+ )
+```
+versus 
+
+```ruby
+  adder = :+.to_proc
+```
+
 
 Mapping with a `Symbol` might not only be conveniently expressed as sending a message to each
 element, sometimes a different meaning might be appropriate as in the example below:
