@@ -391,3 +391,25 @@ A different helper can do this job without any ambiguity:
   map( &applyto( :some_method ) )
 ```
 
+### Commonly Used Pattern Helpers
+
+This group of helpers is just to avoid to rewrite lambdas you/one/whoever/I have written zillions of times. Here is a short list of examples
+the API doc should give you enough information if you look for something specific.
+
+#### Integer.sum
+
+```ruby
+  class Integer
+    def self.sum
+      ->(a, b){ a + b }
+    end
+  end
+```
+
+#### Integer#inc
+
+```ruby
+  class Integer
+    alias_method :inc, :succ # should have used forward ;)
+  end
+```

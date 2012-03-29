@@ -4,7 +4,7 @@ require 'forwarder'
 def let_forwarder_instance name, values={}
   Class.new do
     extend Forwarder
-    define_method :initialize
+    define_method :initialize do
       values.each do | name, value |
         instance_variable_set "@#{name}", value
       end

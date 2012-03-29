@@ -33,11 +33,3 @@ describe Kernel do
   end # describe :applyto
 
 end # describe Kernel
-
-describe Object do do
-  it "has an identity method" do
-    Object.new.tap do | o |
-      o.identity.should eq( o )
-    end
-  end
-end # describe Object do
