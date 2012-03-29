@@ -1,4 +1,5 @@
-$:.unshift File.expand_path("../../lib", __FILE__ )
+lib_path = File.expand_path("../../lib", __FILE__ )
+$:.unshift lib_path
 require 'forwarder'
 
 def let_forwarder_instance name, values={}

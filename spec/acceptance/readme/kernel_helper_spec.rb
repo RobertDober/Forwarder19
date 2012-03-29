@@ -1,10 +1,9 @@
-
 #
 # These specs assure that the README examples work as intented.
 #
 
 require 'spec_helper'
-require 'helpers/kernel'
+require 'forwarder/helpers/kernel'
 
 def inc x; x.succ end
 
@@ -27,7 +26,7 @@ describe Kernel do
       (0..1).map( &applyto( :inc ) ).should eq( [1, 2] ) 
     end
     it "can implement curried functions" do
-      x = lambda{ |y,z| [y,z].min }
+      x = ->( y, z ){ [y,z].min }
       applyto( x, 2 ).(1).should eq( 1 )
     end
   end # describe :applyto

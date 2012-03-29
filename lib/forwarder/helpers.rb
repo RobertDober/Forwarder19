@@ -1,2 +1,4 @@
-require 'forwarder/helpers/proc_helper'
-require 'forwarder/helpers/integer_helper'
+require 'forwarder/helpers/proc'
+require 'forwarder/helpers/integer'
+require 'forwarder/helpers/kernel'
+require 'forwarder/helpers/object'

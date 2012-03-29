@@ -9,7 +9,7 @@ describe Forwarder do
   describe "custom target" do
     
     let_forwarder_instance :wrapper, ary: %w{one two} do
-      forward :first_reverse, to: [:@ary, :first] as: :reverse
+      forward :first_reverse, to: [:@ary, :first], as: :reverse
     end
 
     it "accesses the second element" do

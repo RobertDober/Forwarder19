@@ -3,6 +3,7 @@
 #
 
 require 'spec_helper'
+require 'forwarder'
 
 describe Forwarder do
 

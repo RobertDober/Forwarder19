@@ -4,7 +4,7 @@
 #
 
 require 'spec_helper'
-require 'helpers/object'
+require 'forwarder/helpers/object'
 
 describe Object do
   it "has an identity method" do
