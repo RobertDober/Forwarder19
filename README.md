@@ -12,6 +12,12 @@ an arbitrary object. Paramters can be provided in the forwarding definition (par
 
 It also defines after and before filters.  and some more sophisticated use cases}
 
+## License
+
+This software is released under the very liberal MIT license as indicated in the attached file LICENSE.
+If you do not have the LICENSE file delivered the terms of the license are referred to here:
+http://www.opensource.org/licenses/mit-license.html
+
 ## Simple Delegation As In Forwardable
 
 ```ruby
