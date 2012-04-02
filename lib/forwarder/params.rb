@@ -18,7 +18,7 @@ module Forwarder
     def delegate_to_forwardee
       forwardee.extend Forwardable
       arguments.translation do | tltion |
-        forwardee.def_delegator arguments.target, arguments.message, tltion
+        forwardee.def_delegator arguments.target, tltion, arguments.message
       end or
         forwardee.def_delegator arguments.target, arguments.message
     end

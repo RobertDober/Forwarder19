@@ -25,7 +25,7 @@ describe Forwarder do
       myclass.module_eval do
         extend Forwarder
         should_receive( :extend ).with( Forwardable ).ordered
-        should_receive( :def_delegator ).with( :@elements, :count, :size ).ordered
+        should_receive( :def_delegator ).with( :@elements, :size, :count ).ordered
         forward :count, to: :@elements, as: :size
       end
     end
@@ -37,10 +37,10 @@ describe Forwarder do
     end
 
     it "with forward_all" do
-      mymodule.should_receive( :extend ).with( Forwardable ).ordered
-      mymodule.should_receive( :def_delegators ).with( :@elements, :size, :<<, :first ).ordered
       mymodule.module_eval do
         extend Forwarder
+        should_receive( :extend ).with( Forwardable ).ordered
+        should_receive( :def_delegators ).with( :@elements, :size, :<<, :first ).ordered
         forward_all :size, :<<, :first, to: :elements
       end
     end

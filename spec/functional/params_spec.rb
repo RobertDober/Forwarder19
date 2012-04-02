@@ -19,7 +19,7 @@ describe Forwarder::Params do
   end
   it "forward to a target with translation" do
     forwardee.should_receive( :extend ).with( Forwardable ).ordered
-    forwardee.should_receive( :def_delegator ).with(target, message, translation).ordered
+    forwardee.should_receive( :def_delegator ).with(target, translation, message).ordered
     subject.prepare_forward( message, to: target, as: translation )
     subject.forward!
   end
