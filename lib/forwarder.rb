@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'forwarder/params'
 
 module Forwarder
   

@@ -13,20 +13,20 @@ describe Forwarder do
     end
 
     it "forward without translation" do
-      myclass.should_receive( :extend ).with( Forwardable ).ordered
-      myclass.should_receive( :def_delegator ).with( :@elements, :size ).ordered
       myclass.module_eval do
         extend Forwarder
+        should_receive( :extend ).with( Forwardable ).ordered
+        should_receive( :def_delegator ).with( :elements, :size ).ordered
         forward :size, to: :elements
       end
     end
 
     it "forward with translation" do
-      myclass.should_receive( :extend ).with( Forwardable ).ordered
-      myclass.should_receive( :def_delegator ).with( :@elements, :size, :count ).ordered
       myclass.module_eval do
         extend Forwarder
-        forward :count, to: :elements, as: :size
+        should_receive( :extend ).with( Forwardable ).ordered
+        should_receive( :def_delegator ).with( :@elements, :count, :size ).ordered
+        forward :count, to: :@elements, as: :size
       end
     end
   end # describe "delegation to Forwardable#def_delegator"
