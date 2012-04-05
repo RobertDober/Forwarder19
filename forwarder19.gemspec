@@ -14,9 +14,12 @@ It also defines after and before filters.  and some more sophisticated use cases
   s.files       = Dir.glob("lib/**/*.rb")
   s.files      += %w{LICENSE README.md}
   s.homepage    = 'https://github.com/RobertDober/Forwarder'
-  s.license     = %w{MIT}
+  s.licenses    = %w{MIT}
+
+  s.add_dependency 'lab419_core', '~> 0.0.1'
 
   s.add_development_dependency 'ruby-debug19', '~> 0.11'
+
   s.add_development_dependency 'rake', '~> 0.9.2.2'
   s.add_development_dependency 'rspec', '~> 2.9.0'
   s.add_development_dependency 'maruku', '~> 0.6.0'
