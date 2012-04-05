@@ -13,7 +13,7 @@ describe Forwarder do
     end
 
     it "accesses the second element" do
-      wrapper.first_reverse.should eq( "eno" )
+      wrapper.new.first_reverse.should eq( "eno" )
     end
   end # describe "custom target"
 

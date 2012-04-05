@@ -2,12 +2,16 @@ module Forwarder
   class Arguments
     attr_reader :message, :target
 
+    def chain?
+      @params[ :to_chain ]
+    end
+
     def delegatable?
-      messages.empty?
+      messages.empty? && !chain?
     end
 
     def delegate_to_all?
-      !messages.empty?
+      !messages.empty? && !chain?
     end
 
     def message
@@ -31,10 +35,10 @@ module Forwarder
       @message = args.shift
       raise ArgumentError, "need one message and a hash of kwd params, plus an optional block" unless args.size == 1 && args.first.is_a?( Hash )
       @params = args.first
-      get_target
+      set_target
     end
 
-    def get_target
+    def set_target
       [:to, :to_chain, :to_object].each do | tgt_kwd |
         tgt = @params[ tgt_kwd ]
         next unless tgt

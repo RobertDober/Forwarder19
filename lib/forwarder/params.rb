@@ -1,11 +1,14 @@
 require 'forwarder/arguments'
+require 'forwarder/meta'
 module Forwarder
   class Params
     attr_reader :forwardee, :arguments
     def forward!
       return if delegate
       return if delegate_all
+      return if delegate_chain  
     end
+
     def prepare_forward *args, &blk
       @arguments = Arguments.new( *args, &blk ) 
     end
@@ -23,6 +26,15 @@ module Forwarder
     def delegate_all_to_forwardee
       forwardee.extend Forwardable
       forwardee.def_delegators( arguments.target, *arguments.messages )
+    end
+
+
+    def delegate_chain
+      arguments.chain? and delegate_to_chain
+    end
+
+    def delegate_to_chain
+      Meta.new( forwardee, arguments ).forward
     end
 
     def delegate_to_forwardee
