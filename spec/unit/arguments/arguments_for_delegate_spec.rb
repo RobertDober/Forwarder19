@@ -13,13 +13,17 @@ describe Forwarder::Arguments do
     it "has the correct message" do
       subject.message.should eq( message )
     end
-
+ 
     it "has the correct target" do
       subject.target.should eq( target )
     end
     
     it "can delegate with Forwardable" do
       should be_delegatable
+    end
+
+    it "cannot delegate to all" do
+      should_not be_delegate_to_all
     end
   end # describe 'without translation'
 
@@ -31,6 +35,9 @@ describe Forwarder::Arguments do
 
     it "has the correct message" do
       subject.message.should eq( message )
+    end
+    it "but it does not have any messages" do
+      subject.messages.should be_empty
     end
 
     it "has the correct target" do

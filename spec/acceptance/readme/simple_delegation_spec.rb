@@ -41,7 +41,7 @@ describe Forwarder do
         extend Forwarder
         should_receive( :extend ).with( Forwardable ).ordered
         should_receive( :def_delegators ).with( :@elements, :size, :<<, :first ).ordered
-        forward_all :size, :<<, :first, to: :elements
+        forward_all :size, :<<, :first, to: :@elements
       end
     end
 

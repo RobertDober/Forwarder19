@@ -2,7 +2,21 @@ module Forwarder
   class Arguments
     attr_reader :message, :target
 
-    def delegatable?; true end
+    def delegatable?
+      messages.empty?
+    end
+
+    def delegate_to_all?
+      !messages.empty?
+    end
+
+    def message
+      messages.empty? && @message
+    end
+
+    def messages
+      @messages ||= @message.is_a?( Array ) ? @message.dup : []
+    end
 
     def translation &blk
       @params[ :as ].tap do | tltion |
