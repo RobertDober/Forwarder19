@@ -6,7 +6,7 @@ require 'ostruct'
 describe Forwarder::Meta do
   let :forwardee do
     Class.new do
-      def a; OpenStruct.new.tap{|x| x.b = 42 } end
+      def a; OpenStruct.new.tap{|x| x.b = OpenStruct.new.tap{ |y| y.hello = 42 } } end 
     end
   end
 

@@ -6,9 +6,13 @@ module Forwarder
 
     def forward
       a = arguments
+      sr = symbolic_receiver
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
-          a.target.inject( self ){ |r, m| r.send m } 
+          a
+            .target
+            .inject( self ){ |r, sym| sr.( r, sym ) }
+            .send( a.translation( a.message ), *args, &blk ) 
         end
       end
     end
@@ -17,6 +21,17 @@ module Forwarder
       @forwardee = forwardee
       @arguments = arguments
     end
-    
+
+    def symbolic_receiver
+      @__symbolic_receiver__ = ->(rec, sym) do
+        case "#{sym}"
+        when /\A@/
+          rec.instance_variable_get sym
+        else
+          rec.send sym
+        end 
+      end
+    end
+
   end # class Meta
 end # module Forwarder

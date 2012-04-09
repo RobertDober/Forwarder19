@@ -9,11 +9,17 @@ describe Forwarder do
   describe "custom target" do
     
     let_forwarder_instance :wrapper, ary: %w{one two} do
-      forward :first_reverse, to: [:@ary, :first], as: :reverse
+      attr_reader :ary
+      forward :first_reverse, to_chain: [:@ary, :first], as: :reverse
+      forward :reverse, to_chain: [:ary, :last]
+    end
+
+    it "accesses the first element" do
+      wrapper.new.first_reverse.should eq( "eno" )
     end
 
     it "accesses the second element" do
-      wrapper.new.first_reverse.should eq( "eno" )
+      wrapper.new.reverse.should eq( "owt" )
     end
   end # describe "custom target"
 

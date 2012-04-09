@@ -39,6 +39,7 @@ module Forwarder
 
     def delegate_to_forwardee
       forwardee.extend Forwardable
+      debugger
       arguments.translation do | tltion |
         forwardee.def_delegator arguments.target, tltion, arguments.message
       end or

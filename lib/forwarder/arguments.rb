@@ -22,9 +22,9 @@ module Forwarder
       @messages ||= @message.is_a?( Array ) ? @message.dup : []
     end
 
-    def translation &blk
+    def translation alternative=nil, &blk
       @params[ :as ].tap do | tltion |
-        break unless tltion
+        break alternative unless tltion
         break tltion unless blk
         blk.( tltion ) 
       end

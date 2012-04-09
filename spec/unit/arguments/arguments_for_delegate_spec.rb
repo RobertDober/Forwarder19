@@ -13,6 +13,10 @@ describe Forwarder::Arguments do
     it "has the correct message" do
       subject.message.should eq( message )
     end
+
+    it "has no translation, meaning the translation is the message" do
+      subject.translation.should eq( message )
+    end
  
     it "has the correct target" do
       subject.target.should eq( target )
