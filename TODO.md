@@ -4,3 +4,7 @@
 ### Implement first features
 
 Implement to Chain spec now
+
+### Optimize
+
+define_method is twice as slow as eval
