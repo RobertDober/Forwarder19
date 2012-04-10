@@ -23,7 +23,7 @@ describe Forwarder::Arguments do
     end
 
     it "cannot delegate to all" do
-      should_not be_delegate_to_all
+      should_not be_all
     end
 
     it "delegates to a chain" do
@@ -40,9 +40,6 @@ describe Forwarder::Arguments do
     it "has the correct message" do
       subject.message.should eq( message )
     end
-    it "but it does not have any messages" do
-      subject.messages.should be_empty
-    end
 
     it "has the correct target" do
       subject.target.should eq( target )
@@ -57,7 +54,7 @@ describe Forwarder::Arguments do
     end
 
     it "cannot delegate to all" do
-      should_not be_delegate_to_all
+      should_not be_all
     end
 
     it "delegates to a chain" do

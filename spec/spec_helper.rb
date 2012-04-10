@@ -15,6 +15,6 @@ def let_forwarder_instance let_name, values={}, &blk
 
     end.tap do | klass |
       klass.module_eval( &blk ) if blk
-    end
+    end.new
   end
 end

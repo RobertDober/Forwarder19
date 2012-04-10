@@ -6,7 +6,7 @@ require 'spec_helper'
 
 describe Forwarder do
 
-  describe "custom target" do
+  describe "chain" do
     
     let_forwarder_instance :wrapper, ary: %w{one two} do
       attr_reader :ary
@@ -23,4 +23,16 @@ describe Forwarder do
     end
   end # describe "custom target"
 
+  describe "chain with args" do
+    
+    let_forwarder_instance :wrapper, ary: %w{one two} do
+      attr_reader :ary
+      forward :letter, to_chain: [:@ary, :first], as: :[], with: 1
+    end
+
+    it "accesses the letter" do
+      wrapper.new.letter.should eq( "n" )
+    end
+
+  end # describe "custom target"
 end # describe Forwarder

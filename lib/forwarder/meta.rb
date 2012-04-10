@@ -9,6 +9,18 @@ module Forwarder
       sr = symbolic_receiver
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
+          sr
+            .( self, a.target )
+            .send( a.translation( a.message ), *a.complete_args(*args), &blk ) 
+        end
+      end
+    end
+
+    def forward_chain
+      a = arguments
+      sr = symbolic_receiver
+      forwardee.module_eval do
+        define_method a.message do |*args, &blk|
           a
             .target
             .inject( self ){ |r, sym| sr.( r, sym ) }
@@ -16,6 +28,7 @@ module Forwarder
         end
       end
     end
+
     private
     def initialize forwardee, arguments
       @forwardee = forwardee

@@ -26,21 +26,4 @@ describe Forwarder::Params do
     end
   end
 
-  describe "when it can use Forwardable with all" do
-    let :forwardee do double "forwardee" end 
-    let :target do :@ivar_name end
-    let :messages do %w{one two three} end
-    let :translation do :another_message end
-
-    subject do
-      described_class.new( forwardee )
-    end
-    
-    it "forwards all to target" do
-      forwardee.should_receive( :extend ).with( Forwardable ).ordered
-      forwardee.should_receive( :def_delegators ).with( target, *messages ).ordered
-      subject.prepare_forward( messages, to: target )
-      subject.forward!
-    end
-  end # describe "when it can use Forwardable with all"
 end # describe Forwarder::Params

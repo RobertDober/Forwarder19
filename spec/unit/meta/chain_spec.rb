@@ -14,7 +14,7 @@ describe Forwarder::Meta do
     described_class.new forwardee, Forwarder::Arguments.new( :hello, to_chain: %w{a b} )
   end
   it "forwards correctly" do
-    subject.forward
+    subject.forward_chain
     forwardee.new.hello.should eq( 42 )
   end
 end # describe Forwarder::Meta

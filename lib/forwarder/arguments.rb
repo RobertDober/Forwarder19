@@ -1,25 +1,25 @@
 module Forwarder
   class Arguments
-    attr_reader :message, :target
+    attr_reader :args, :message, :target
+
+    def all?
+      @__all__
+    end
+
+    def args?
+      !!args
+    end
 
     def chain?
       @params[ :to_chain ]
     end
 
     def delegatable?
-      messages.empty? && !chain?
+      !all? && !chain? && !args
     end
 
-    def delegate_to_all?
-      !messages.empty? && !chain?
-    end
-
-    def message
-      messages.empty? && @message
-    end
-
-    def messages
-      @messages ||= @message.is_a?( Array ) ? @message.dup : []
+    def complete_args *args
+      (self.args || []) + args
     end
 
     def translation alternative=nil, &blk
@@ -35,7 +35,38 @@ module Forwarder
       @message = args.shift
       raise ArgumentError, "need one message and a hash of kwd params, plus an optional block" unless args.size == 1 && args.first.is_a?( Hash )
       @params = args.first
+      set_message
       set_target
+      set_args
+    end
+
+    def set_args
+      hw = @params.has_key? :with
+      ha = @params.has_key? :with_ary
+      raise ArgumentError, "cannot use :with and :with_ary parameter" if hw && ha
+      set_args_normal if hw
+      set_args_ary if ha
+    end
+
+    def set_args_ary
+      @args = [ @params[:with_ary] ]
+      raise ArgumentError, ":with_ary needs an array parameter" unless Array === @args.first
+    end
+
+    def set_args_normal
+      case arg = @params[:with]
+      when Array
+        @args = arg.dup
+      else
+        @args = [ arg ]
+      end
+    end
+
+    def set_message
+      case @message
+      when Array
+        @__all__ = true
+      end
     end
 
     def set_target

@@ -7,6 +7,7 @@ module Forwarder
       return if delegate
       return if delegate_all
       return if delegate_chain  
+      general_delegate
     end
 
     def prepare_forward *args, &blk
@@ -16,11 +17,15 @@ module Forwarder
     private
 
     def delegate
-      arguments.delegatable? and delegate_to_forwardee
+      return unless arguments.delegatable? 
+      delegate_to_forwardee
+      true
     end
 
     def delegate_all
-      arguments.delegate_to_all? and delegate_all_to_forwardee
+      return unless arguments.all?
+      delegate_all_to_forwardee
+      true
     end
 
     def delegate_all_to_forwardee
@@ -30,16 +35,17 @@ module Forwarder
 
 
     def delegate_chain
-      arguments.chain? and delegate_to_chain
+      return unless arguments.chain?
+      delegate_to_chain
+      true
     end
 
     def delegate_to_chain
-      Meta.new( forwardee, arguments ).forward
+      Meta.new( forwardee, arguments ).forward_chain
     end
 
     def delegate_to_forwardee
       forwardee.extend Forwardable
-      debugger
       arguments.translation do | tltion |
         forwardee.def_delegator arguments.target, tltion, arguments.message
       end or
@@ -48,6 +54,10 @@ module Forwarder
 
     def initialize forwardee
       @forwardee = forwardee
+    end
+
+    def general_delegate
+      Meta.new( forwardee, arguments ).forward
     end
   end # class Params
 end # module Forwarder

@@ -11,7 +11,7 @@ describe Forwarder::Arguments do
     end
 
     it "delegates to all" do
-      should be_delegate_to_all
+      should be_all
     end
 
     it "has the correct target" do
@@ -23,10 +23,7 @@ describe Forwarder::Arguments do
     end
 
     it "does not have a message" do
-      subject.message.should be_false
-    end
-    it "but messages" do
-      subject.messages.should eq( messages )
+      subject.message.should eq( %w{two messages} )
     end
   end # describe 'without translation'
 

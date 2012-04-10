@@ -3,7 +3,11 @@
 
 ### Implement first features
 
-Implement to Chain spec now
+Implement with params now
+
+Fix block not passed in 2 last failing specs in spec/acceptance/readme/forward_with_params_spec.rb
+
+### Get rid of functional spec
 
 ### Optimize
 

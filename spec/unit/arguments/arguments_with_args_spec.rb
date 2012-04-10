@@ -3,38 +3,47 @@ require 'forwarder/arguments'
 
 describe Forwarder::Arguments do
   let( :message ){ :a_message }
-  let( :target  ){ :a_target  }
+  let( :target  ){ :hello  }
+  let( :args ){ :world }
 
   describe 'without translation' do
     subject do
-      described_class.new( message, to: target )
+      described_class.new( message, to: target, with: args )
     end
 
     it "has the correct message" do
       subject.message.should eq( message )
-    end
-
-    it "has no translation, meaning the translation uses the passed in default" do
-      subject.translation(42).should eq( 42 )
     end
  
     it "has the correct target" do
       subject.target.should eq( target )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
+    it "cannot delegate with Forwardable" do
+      should_not be_delegatable
     end
 
     it "cannot delegate to all" do
       should_not be_all
+    end
+
+    it "delegates to a chain" do
+      should_not be_chain
+    end
+
+    it "has arguments" do
+      should be_args
+    end
+
+    it "generates completed args" do
+      subject.complete_args(1,2).should eq( [args,1,2] )
     end
   end # describe 'without translation'
 
   describe 'with translation' do
     let( :translation ){ :a_translation }
     subject do
-      described_class.new( message, to: target, as: translation )
+      described_class.new( message, to: target, as: translation, with: args )
     end
 
     it "has the correct message" do
@@ -49,8 +58,20 @@ describe Forwarder::Arguments do
       subject.translation.should eq( translation )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
+    it "cannot delegate with Forwardable" do
+      should_not be_delegatable
+    end
+
+    it "cannot delegate to all" do
+      should_not be_all
+    end
+
+    it "delegates to a chain" do
+      should_not be_chain
+    end
+
+    it "has arguments" do
+      should be_args
     end
   end # describe 'without translation'
 end # describe Forwarder::Arguments
