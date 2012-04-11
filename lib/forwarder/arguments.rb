@@ -14,8 +14,12 @@ module Forwarder
       @params[ :to_chain ]
     end
 
+    def custom_target?
+      @params[:to_object]
+    end
+
     def delegatable?
-      !all? && !chain? && !args && !lambda?
+      !custom_target? && !all? && !chain? && !args && !lambda?
     end
 
     def complete_args *args
@@ -30,6 +34,13 @@ module Forwarder
       @lambda
     end
 
+    # This is always nil unless we are a custom_target, in which case
+    # default is returned if target is :self, else target is returned
+    def object_target default
+      return unless custom_target?
+      target == :self ? default : target
+    end
+      
     def translation alternative=nil, &blk
       @params[ :as ].tap do | tltion |
         break alternative unless tltion

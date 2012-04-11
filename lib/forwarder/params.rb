@@ -7,6 +7,7 @@ module Forwarder
       return if delegate
       return if delegate_all
       return if delegate_chain  
+      return if delegate_object
       general_delegate
     end
 
@@ -44,6 +45,12 @@ module Forwarder
       Meta.new( forwardee, arguments ).forward_chain
     end
 
+    def delegate_object
+      return unless arguments.custom_target?
+      Meta.new( forwardee, arguments ).forward_object
+      true
+    end
+      
     def delegate_to_forwardee
       forwardee.extend Forwardable
       arguments.translation do | tltion |

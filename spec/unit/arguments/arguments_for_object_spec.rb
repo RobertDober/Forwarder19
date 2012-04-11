@@ -7,7 +7,7 @@ describe Forwarder::Arguments do
 
   describe 'without translation' do
     subject do
-      described_class.new( message, to_chain: target )
+      described_class.new( message, to_object: target )
     end
 
     it "has the correct message" do
@@ -26,23 +26,28 @@ describe Forwarder::Arguments do
       should_not be_all
     end
 
-    it "delegates to a chain" do
-      should be_chain
+    it "does not delegate to a chain" do
+      should_not be_chain
     end
 
-    it "does not delegate to a custom object" do
-      should_not be_custom_target
+    it "delegates to a custom object" do
+      should be_custom_target
     end
 
-    it "has no object target" do
-      subject.object_target( 42 ).should be_nil
+    it "does not have a lambda" do
+      should_not be_lambda
+    end
+
+    it "has an object target" do
+      subject.object_target( 42 ).should eq( target )
     end
   end # describe 'without translation'
 
   describe 'with translation' do
+    let( :target ){ :self }
     let( :translation ){ :a_translation }
     subject do
-      described_class.new( message, to_chain: target, as: translation )
+      described_class.new( message, to_object: target, as: translation, with_block: ->{} )
     end
 
     it "has the correct message" do
@@ -65,8 +70,19 @@ describe Forwarder::Arguments do
       should_not be_all
     end
 
-    it "delegates to a chain" do
-      should be_chain
+    it "does not delegate to a chain" do
+      should_not be_chain
+    end
+
+    it "delegates to a custom object" do
+      should be_custom_target
+    end
+
+    it "has a lambda" do
+      should be_lambda
+    end
+    it "has an object target to be passed in" do
+      subject.object_target( 42 ).should eq( 42 )
     end
   end # describe 'without translation'
 end # describe Forwarder::Arguments
