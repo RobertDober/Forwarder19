@@ -5,13 +5,18 @@ module Forwarder
     attr_reader :arguments, :forwardee
 
     def forward
+      return forward_block if arguments.lambda?
+      forward_no_block
+    end
+
+    def forward_block
       a = arguments
       sr = symbolic_receiver
       forwardee.module_eval do
-        define_method a.message do |*args, &blk|
+        define_method a.message do |*args|
           sr
             .( self, a.target )
-            .send( a.translation( a.message ), *a.complete_args(*args), &blk ) 
+            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda ) 
         end
       end
     end
@@ -24,7 +29,19 @@ module Forwarder
           a
             .target
             .inject( self ){ |r, sym| sr.( r, sym ) }
-            .send( a.translation( a.message ), *args, &blk ) 
+            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda(blk) ) 
+        end
+      end
+    end
+
+    def forward_no_block
+      a = arguments
+      sr = symbolic_receiver
+      forwardee.module_eval do
+        define_method a.message do |*args, &blk|
+          sr
+            .( self, a.target )
+            .send( a.translation( a.message ), *a.complete_args(*args), &blk ) 
         end
       end
     end

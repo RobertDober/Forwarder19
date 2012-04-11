@@ -30,7 +30,7 @@ module Forwarder
 
     def delegate_all_to_forwardee
       forwardee.extend Forwardable
-      forwardee.def_delegators( arguments.target, *arguments.messages )
+      forwardee.def_delegators( arguments.target, *arguments.message )
     end
 
 

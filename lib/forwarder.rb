@@ -12,7 +12,7 @@ module Forwarder
   def forward_all *args, &blk
     params = Forwarder::Params.new self
     opts   = args.pop
-    params.prepare_forward( args, opts.update( many: true ), &blk )
+    params.prepare_forward( args, opts, &blk )
     params.forward!
   end
 end # module Forwarder

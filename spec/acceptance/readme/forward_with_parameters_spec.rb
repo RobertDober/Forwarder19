@@ -71,7 +71,7 @@ describe Forwarder do
     describe "as block of forward" do
       let_forwarder_instance :gauss, :elements => [*1..100] do
         attr_reader :elements
-        forward :sum, to: :elements, as: :inject, &Integer.sum
+        forward :sum, to: :@elements, as: :inject, &Integer.sum
       end
       it "computes 5050" do
         gauss.sum.should eq( 5050 )

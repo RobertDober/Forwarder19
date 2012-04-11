@@ -3,7 +3,7 @@ module Forwarder
     attr_reader :args, :message, :target
 
     def all?
-      @__all__
+      !args? && !lambda? && @__all__
     end
 
     def args?
@@ -15,11 +15,19 @@ module Forwarder
     end
 
     def delegatable?
-      !all? && !chain? && !args
+      !all? && !chain? && !args && !lambda?
     end
 
     def complete_args *args
       (self.args || []) + args
+    end
+
+    def lambda default=nil
+      @lambda || default
+    end
+
+    def lambda?
+      @lambda
     end
 
     def translation alternative=nil, &blk
@@ -37,10 +45,11 @@ module Forwarder
       @params = args.first
       set_message
       set_target
-      set_args
+      set_args blk
     end
 
-    def set_args
+    def set_args blk
+      set_lambda blk
       hw = @params.has_key? :with
       ha = @params.has_key? :with_ary
       raise ArgumentError, "cannot use :with and :with_ary parameter" if hw && ha
@@ -67,6 +76,12 @@ module Forwarder
       when Array
         @__all__ = true
       end
+    end
+
+    def set_lambda blk
+      raise ArgumentError, "cannot use :with_block and a block" if
+        @params[:with_block] && blk
+      @lambda = @params.fetch :with_block, blk
     end
 
     def set_target
