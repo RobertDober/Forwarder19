@@ -6,6 +6,10 @@ module Forwarder
       !args? && !lambda? && @__all__
     end
 
+    def aop?
+      @__aop__ ||= !@params.values_at(:after, :before).compact.empty?
+    end
+
     def args?
       !!args
     end
@@ -19,7 +23,7 @@ module Forwarder
     end
 
     def delegatable?
-      !custom_target? && !all? && !chain? && !args && !lambda?
+      !aop? && !custom_target? && !all? && !chain? && !args && !lambda?
     end
 
     def complete_args *args

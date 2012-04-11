@@ -25,6 +25,10 @@ describe Forwarder::Arguments do
     it "does not have a message" do
       subject.message.should eq( %w{two messages} )
     end
+
+    it "does not have any aop" do
+      should_not be_aop
+    end
   end # describe 'without translation'
 
 end # describe Forwarder::Arguments

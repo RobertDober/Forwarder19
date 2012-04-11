@@ -7,7 +7,7 @@ describe Forwarder::Arguments do
 
   describe 'without translation' do
     subject do
-      described_class.new( message, to: target )
+      described_class.new( message, to: target, after: :use_block ){ 42 }
     end
 
     it "has the correct message" do
@@ -22,19 +22,23 @@ describe Forwarder::Arguments do
       subject.target.should eq( target )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
+    it "cannot delegate with Forwardable" do
+      should_not be_delegatable
     end
 
     it "cannot delegate to all" do
       should_not be_all
+    end
+    
+    it "is aop" do
+      should be_aop
     end
   end # describe 'without translation'
 
   describe 'with translation' do
     let( :translation ){ :a_translation }
     subject do
-      described_class.new( message, to: target, as: translation )
+      described_class.new( message, to: target, as: translation, after: ->{} )
     end
 
     it "has the correct message" do
@@ -49,12 +53,12 @@ describe Forwarder::Arguments do
       subject.translation.should eq( translation )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
+    it "cannot delegate with Forwardable" do
+      should_not be_delegatable
     end
 
-    it "does not have any aop" do
-      should_not be_aop
+    it "is aop" do
+      should be_aop
     end
   end # describe 'without translation'
 end # describe Forwarder::Arguments
