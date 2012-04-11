@@ -46,12 +46,16 @@ describe Forwarder::Arguments do
     it "is *not* lambda, the block is used by AOP" do
       should_not be_lambda
     end
+
+    it "can access before" do
+      subject.before.().should eq( 42 )
+    end
   end # describe 'without translation'
 
   describe 'with translation' do
     let( :translation ){ :a_translation }
     subject do
-      described_class.new( message, to: target, as: translation, after: ->{} )
+      described_class.new( message, to: target, as: translation, after: ->(x){2*x} )
     end
 
     it "has the correct message" do
@@ -76,6 +80,10 @@ describe Forwarder::Arguments do
 
     it "is after" do
       should be_after
+    end
+
+    it "can exec after" do
+      subject.after.(21).should eq( 42 )
     end
 
     it "is not before" do

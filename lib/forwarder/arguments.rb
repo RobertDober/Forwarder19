@@ -6,8 +6,12 @@ module Forwarder
       !args? && !lambda? && @__all__
     end
 
-    def after?
+    def after
       @params[:after]
+    end
+
+    def after?
+      after
     end
 
     def aop?
@@ -18,8 +22,12 @@ module Forwarder
       !!args
     end
 
-    def before?
+    def before
       @params[:before]
+    end
+
+    def before?
+      before
     end
 
     def chain?

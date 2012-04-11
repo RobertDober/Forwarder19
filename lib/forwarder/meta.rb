@@ -5,15 +5,17 @@ module Forwarder
     attr_reader :arguments, :forwardee
 
 
+    # TODO: Break AOP out of this so that we do not check @ runtime
     def forward
       a = arguments
       sr = symbolic_receiver
       forwardee.module_eval do
-       
         define_method a.message do |*args, &blk|
           sr
             .( self, a.target )
-            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ) 
+            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |
+              break a.after.( result ) if a.after?
+            end
         end
       end
     end
