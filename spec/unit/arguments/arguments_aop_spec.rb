@@ -7,7 +7,7 @@ describe Forwarder::Arguments do
 
   describe 'without translation' do
     subject do
-      described_class.new( message, to: target, after: :use_block ){ 42 }
+      described_class.new( message, to: target, before: :use_block ){ 42 }
     end
 
     it "has the correct message" do
@@ -32,6 +32,19 @@ describe Forwarder::Arguments do
     
     it "is aop" do
       should be_aop
+    end
+
+    it "is not after" do
+      should_not be_after
+    end
+
+    it "is before" do
+      should be_before
+    end
+
+    # !!!!!
+    it "is *not* lambda, the block is used by AOP" do
+      should_not be_lambda
     end
   end # describe 'without translation'
 
@@ -59,6 +72,14 @@ describe Forwarder::Arguments do
 
     it "is aop" do
       should be_aop
+    end
+
+    it "is after" do
+      should be_after
+    end
+
+    it "is not before" do
+      should_not be_before
     end
   end # describe 'without translation'
 end # describe Forwarder::Arguments

@@ -9,6 +9,7 @@ module Forwarder
       a = arguments
       sr = symbolic_receiver
       forwardee.module_eval do
+       
         define_method a.message do |*args, &blk|
           sr
             .( self, a.target )
