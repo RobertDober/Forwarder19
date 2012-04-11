@@ -6,12 +6,20 @@ module Forwarder
       !args? && !lambda? && @__all__
     end
 
+    def after?
+      @params[:after]
+    end
+
     def aop?
       @__aop__ ||= !@params.values_at(:after, :before).compact.empty?
     end
 
     def args?
       !!args
+    end
+
+    def before?
+      @params[:before]
     end
 
     def chain?
@@ -31,11 +39,13 @@ module Forwarder
     end
 
     def lambda default=nil
-      @lambda || default
+      lambda? || default
     end
 
     def lambda?
-      @lambda
+      !( @params.values_at( :after, :before )
+          .include?( :use_block )
+       ) && @lambda
     end
 
     # This is always nil unless we are a custom_target, in which case
