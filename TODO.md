@@ -5,6 +5,8 @@
 
 Make some very complete examples in acceptance tests
 
+#### Implement them with combing chain, AOP and custom target
+
 
 
 ### Optimize

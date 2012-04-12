@@ -26,10 +26,12 @@ module Forwarder
       sr = symbolic_receiver
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
-          a
-            .target
-            .inject( self ){ |r, sym| sr.( r, sym ) }
-            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ) 
+          args = a.before.(*args) if a.before?
+          tgt = a.target.inject( self ){ |r, sym| sr.( r, sym ) }
+          tgt.send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |
+              break a.after.( result ) if a.after?
+            end
+            #.send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ) 
         end
       end
     end
@@ -38,8 +40,11 @@ module Forwarder
       a = arguments
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
+          args = a.before.(*args) if a.before?
           a.object_target( self )
-            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda(blk) ) 
+            .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |
+              break a.after.( result ) if a.after?
+            end
         end
       end
       
