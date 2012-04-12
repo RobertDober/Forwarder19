@@ -7,7 +7,7 @@ module Forwarder
     end
 
     def after
-      @params[:after]
+      @after ||= @params[:after]
     end
 
     def after?
@@ -15,7 +15,7 @@ module Forwarder
     end
 
     def aop?
-      @__aop__ ||= !@params.values_at(:after, :before).compact.empty?
+      @__aop__ ||= !aop_values.empty?
     end
 
     def args?
@@ -23,7 +23,7 @@ module Forwarder
     end
 
     def before
-      @params[:before]
+      @before ||= @params[:before]
     end
 
     def before?
@@ -51,9 +51,7 @@ module Forwarder
     end
 
     def lambda?
-      !( @params.values_at( :after, :before )
-          .include?( :use_block )
-       ) && @lambda
+      @lambda
     end
 
     # This is always nil unless we are a custom_target, in which case
@@ -72,6 +70,10 @@ module Forwarder
     end
 
     private
+    def aop_values
+      @__aop_values__ ||= @params.values_at( :after, :before ).compact
+    end
+
     def initialize *args, &blk
       @message = args.shift
       raise ArgumentError, "need one message and a hash of kwd params, plus an optional block" unless args.size == 1 && args.first.is_a?( Hash )
@@ -112,9 +114,16 @@ module Forwarder
     end
 
     def set_lambda blk
-      raise ArgumentError, "cannot use :with_block and a block" if
-        @params[:with_block] && blk
-      @lambda = @params.fetch :with_block, blk
+      if use_block?
+        @after  = @params[:after] && blk
+        @before = @params[:before] && blk
+        @lambda = @params[:with_block]
+      else
+        raise ArgumentError, "cannot use :with_block and a block" if
+          @params[:with_block] && blk
+
+        @lambda = @params.fetch :with_block, blk
+      end
     end
 
     def set_target
@@ -126,6 +135,10 @@ module Forwarder
         @target = tgt 
       end
       raise ArgumentError, "no target specified." unless @target
+    end
+
+    def use_block?
+      aop_values.include?( :use_block )
     end
   end # class Arguments
 end # module Forwarder
