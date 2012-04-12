@@ -2,3 +2,4 @@
 *.gem
 .rspec
 open-project.zsh
+tmp/
