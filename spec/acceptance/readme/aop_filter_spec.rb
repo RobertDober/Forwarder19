@@ -3,6 +3,7 @@
 #
 
 require 'spec_helper'
+require 'lab419/core/kernel'
 
 describe Forwarder do
   describe "AOP" do
@@ -37,9 +38,39 @@ describe Forwarder do
         forward :value_of_max2, to: :@hash, as: :[], before: :use_block do | *args |
           args.max
         end
-        forward :value_of_max3, to: :@hash, as: :[], before: sendmsg( :max )
+        forward :value_of_max3, to: :@hash, as: :[], before: ->(*args){args.max}
       end
 
+      it "gets value_of_max1" do
+        wrapper.value_of_max1( 0, 1, 2, 3 ).should eq( 10 )
+      end
+
+      it "gets value of max 2" do
+        wrapper.value_of_max2( 0, 1, 2 ).should eq( 20 )
+      end
+
+      it "gets value of max 3" do
+        wrapper.value_of_max3( 0, 1, 2, 4 ).should be_nil
+      end
     end # describe :before
+
+    describe "after and before" do
+      select_odd =
+        ->(*args){ args.select(&sendmsg(:odd?)) }
+
+      let_forwarder_instance :wrapper, ary: [*0..9] do
+        forward :odd_doubled_sum,
+                to: :@ary,
+                as: :values_at, 
+                before: select_odd,
+                after: :use_block do |e|
+                  e.inject(0,&Integer.sum)
+                end
+      end
+
+      it "sums correctly" do
+        wrapper.odd_doubled_sum(1, 2, 3).should eq( 4 )
+      end
+    end # describe "after and before"
   end # describe "AOP"
 end # describe Forwarder do

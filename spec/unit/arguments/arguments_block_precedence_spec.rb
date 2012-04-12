@@ -84,4 +84,19 @@ describe Forwarder::Arguments do
       subject.after.should eq( after )
     end
   end # describe 'no block at all'
+
+  describe 'use_block distinguishes target' do
+    let :block do ->{3} end
+    subject{ described_class.new message, to: target, after: :use_block, with_block: block, before: before, &after }
+    it "has a lambda" do
+      subject.lambda.should eq( block )
+    end
+    it "does not have before" do
+      subject.before.should eq( before )
+    end
+    it "has after" do
+      subject.after.should eq( after )
+    end
+  end # describe 'no block at all'
+  
 end # describe Forwarder::Arguments

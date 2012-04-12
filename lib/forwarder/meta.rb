@@ -11,6 +11,7 @@ module Forwarder
       sr = symbolic_receiver
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
+          args = a.before.(*args) if a.before?
           sr
             .( self, a.target )
             .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |

@@ -114,9 +114,10 @@ module Forwarder
     end
 
     def set_lambda blk
+
       if use_block?
-        @after  = @params[:after] && blk
-        @before = @params[:before] && blk
+        @after  = blk if @params[:after] == :use_block
+        @before = blk if @params[:before] == :use_block
         @lambda = @params[:with_block]
       else
         raise ArgumentError, "cannot use :with_block and a block" if
