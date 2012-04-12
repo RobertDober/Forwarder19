@@ -2,13 +2,14 @@
 # These specs assure that the README examples work as intented.
 #
 
+require 'lab419/core/integer'
 require 'spec_helper'
 
 describe Forwarder do
 
   describe "passing one parameter" do
     let_forwarder_instance :wrapper, :ary => %w{one two} do
-      forward :second, to: :@ary, as: [], with: 1
+      forward :second, to: :@ary, as: :[], with: 1
     end
 
     it "accesses the second element" do
@@ -69,7 +70,8 @@ describe Forwarder do
   describe "passing a block" do
     describe "as block of forward" do
       let_forwarder_instance :gauss, :elements => [*1..100] do
-        forward :sum, to: :elements, as: :inject &Integer.sum
+        attr_reader :elements
+        forward :sum, to: :@elements, as: :inject, &Integer.sum
       end
       it "computes 5050" do
         gauss.sum.should eq( 5050 )
@@ -77,7 +79,7 @@ describe Forwarder do
     end # describe as block of forward
     describe "using with_block: and a lambda" do
       let_forwarder_instance :gauss, :elements => [*1..100] do
-        forward :sum, to: :elements, as: :inject, with_block: Integer.sum
+        forward :sum, to: :@elements, as: :inject, with_block: Integer.sum
       end
       it "computes 5050" do
         gauss.sum.should eq( 5050 )

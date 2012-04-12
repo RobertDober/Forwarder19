@@ -331,6 +331,8 @@ will use a splash if appropriate.
 
 ## Helpers
 
+*N.B.* These are no longer part of Forwarder19, but have been moved into the gemdependency lab419_core.
+
 Helpers define two type of methods. Firstly methods that return lambdas for frequently used
 block patterns, e.g. `Integer.sum`. Secondly methods that are convenient to use inside `forward`
 invocations, but not necessarily only there, e.g. `Kernel#sendmsg` or `Object#identity`.

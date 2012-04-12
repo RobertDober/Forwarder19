@@ -4,6 +4,7 @@ GEM
     archive-tar-minitar (0.5.2)
     columnize (0.3.6)
     diff-lcs (1.1.3)
+    lab419_core (0.0.1)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
     maruku (0.6.0)
@@ -33,6 +34,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  lab419_core (~> 0.0.1)
   maruku (~> 0.6.0)
   rspec (~> 2.9.0)
   ruby-debug19 (~> 0.11)

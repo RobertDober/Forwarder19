@@ -32,6 +32,7 @@ describe Forwarder do
     describe ":self" do
       let_forwarder_instance :wrapper, ary: %w{one two} do
         forward :second, to_object: :self, as: :[], with: 1
+        forward :[], to: :@ary
       end
       
       it "accesses the second element" do
@@ -42,7 +43,7 @@ describe Forwarder do
     describe "as closure" do
       let_forwarder_instance :counter do
         container = []
-        forward :register, to_oject: container, as: :<<, with: :sentinel
+        forward :register, to_object: container, as: :<<, with: :sentinel
         forward :count, to_object: container, as: :size
       end
 
