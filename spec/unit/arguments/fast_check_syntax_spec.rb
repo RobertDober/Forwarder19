@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'forwarder/arguments'
 
-describe Forwarder::Arguments do
+describe FForwarder::Arguments do
   describe ArgumentError do
     describe "wrong arg count" do
       it 'is raised for too few args' do

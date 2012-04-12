@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'forwarder/meta'
 require 'ostruct'
 
-describe Forwarder::Meta do
+describe FForwarder::Meta do
   let :forwardee do
     Class.new do
       def a; "abc" end 
@@ -12,7 +12,7 @@ describe Forwarder::Meta do
 
   describe "params without translation" do
     subject do
-      described_class.new forwardee, Forwarder::Arguments.new( :[], to: :a, with: 1 )
+      described_class.new forwardee, FForwarder::Arguments.new( :[], to: :a, with: 1 )
     end
     it "forwards correctly" do
       subject.forward
@@ -22,7 +22,7 @@ describe Forwarder::Meta do
 
   describe "params with translation" do
     subject do
-      described_class.new forwardee, Forwarder::Arguments.new( :get, to: :a, with: 1, as: :[] )
+      described_class.new forwardee, FForwarder::Arguments.new( :get, to: :a, with: 1, as: :[] )
     end
     it "forwards correctly" do
       subject.forward

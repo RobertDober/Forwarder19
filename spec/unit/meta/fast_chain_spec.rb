@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'forwarder/meta'
 require 'ostruct'
 
-describe Forwarder::Meta do
+describe FForwarder::Meta do
   let :forwardee do
     Class.new do
       def a; OpenStruct.new.tap{|x| x.b = OpenStruct.new.tap{ |y| y.hello = 42 } } end 
@@ -11,7 +11,7 @@ describe Forwarder::Meta do
   end
 
   subject do
-    described_class.new forwardee, Forwarder::Arguments.new( :hello, to_chain: %w{a b} )
+    described_class.new forwardee, FForwarder::Arguments.new( :hello, to_chain: %w{a b} )
   end
   it "forwards correctly" do
     subject.forward_chain

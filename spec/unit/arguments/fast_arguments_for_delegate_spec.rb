@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'forwarder/arguments'
 
-describe Forwarder::Arguments do
+describe FForwarder::Arguments do
   let( :message ){ :a_message }
   let( :target  ){ :a_target  }
 
