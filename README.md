@@ -22,7 +22,7 @@ http://www.opensource.org/licenses/mit-license.html
 
 Performance is _normal_, as it is for 'Forwardable' however the goal is to have delegated methods
 to run about as twice as fast as methods created by 'Forwardable.def_delegator'. This seems to be
-a realistic goal as can be seen here:
+a realistic goal as can be seen here: https://github.com/RobertDober/Forwarder19/blob/dev/bm/study.rb
 
 
 ## Simple Delegation As In Forwardable
