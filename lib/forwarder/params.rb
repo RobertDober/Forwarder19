@@ -30,8 +30,13 @@ module Forwarder
     end
 
     def delegate_all_to_forwardee
-      forwardee.extend Forwardable
-      forwardee.def_delegators( arguments.target, *arguments.message )
+      arguments.message.each do | msg |
+        forwardee.module_eval(
+          "def #{msg} *args, &blk; #{arguments.target}.#{msg}( *args, &blk ) end",
+          __FILE__,
+          __LINE__
+        )
+      end
     end
 
 
