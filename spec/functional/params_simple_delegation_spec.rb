@@ -13,14 +13,16 @@ describe Forwarder::Params do
     end
 
     it "forwards to a target" do
-      forwardee.should_receive( :extend ).with( Forwardable ).ordered
-      forwardee.should_receive( :def_delegator ).with(target, message).ordered
+      forwardee
+        .should_receive( :module_eval )
+        .with( "def #{message} *args, &blk; #{target}.#{message}( *args, &blk ) end", anything, anything )
       subject.prepare_forward( message, to: target )
       subject.forward!
     end
     it "forward to a target with translation" do
-      forwardee.should_receive( :extend ).with( Forwardable ).ordered
-      forwardee.should_receive( :def_delegator ).with(target, translation, message).ordered
+      forwardee
+        .should_receive( :module_eval )
+        .with( "def #{message} *args, &blk; #{target}.#{translation}( *args, &blk ) end", anything, anything )
       subject.prepare_forward( message, to: target, as: translation )
       subject.forward!
     end

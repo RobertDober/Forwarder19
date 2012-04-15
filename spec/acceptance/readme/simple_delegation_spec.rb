@@ -3,48 +3,45 @@
 #
 
 require 'spec_helper'
-require 'forwardable'
 
 describe Forwarder do
-
-  describe "delegation to Forwardable#def_delegator" do
-    let :myclass do
-      Class.new
+  
+  describe "simple without translation" do
+    let_forwarder_instance :wrapper, ary: %w{one two} do
+      attr_reader :ary
+      forward :first, to: :ary
     end
 
-    it "forward without translation" do
-      myclass.module_eval do
-        extend Forwarder
-        should_receive( :extend ).with( Forwardable ).ordered
-        should_receive( :def_delegator ).with( :elements, :size ).ordered
-        forward :size, to: :elements
-      end
+    it "accesses the first element" do
+      wrapper.first.should eq( "one" )
+    end
+    
+  end # describe "simple without translation" do
+
+  describe "simple with translation" do
+    let_forwarder_instance :wrapper, ary: %w{one two} do
+      forward :tail, to: :@ary, as: :last
     end
 
-    it "forward with translation" do
-      myclass.module_eval do
-        extend Forwarder
-        should_receive( :extend ).with( Forwardable ).ordered
-        should_receive( :def_delegator ).with( :@elements, :size, :count ).ordered
-        forward :count, to: :@elements, as: :size
-      end
+    it "accesses the first element" do
+      wrapper.tail.should eq( "two" )
     end
-  end # describe "delegation to Forwardable#def_delegator"
+  end # describe "simple without translation" do
 
-  describe "delegation to Forwardable#def_delegators" do
-    let :mymodule do
-      Module.new
+  describe "simple with translations, assure args are passed trhorugh)" do
+    let_forwarder_instance :wrapper, ary: %w{one two} do
+      attr_reader :ary
+      forward :get, to: :ary, as: :[]
     end
 
-    it "with forward_all" do
-      mymodule.module_eval do
-        extend Forwarder
-        should_receive( :extend ).with( Forwardable ).ordered
-        should_receive( :def_delegators ).with( :@elements, :size, :<<, :first ).ordered
-        forward_all :size, :<<, :first, to: :@elements
-      end
+    it "accesses the first element" do
+      wrapper.get( 0 ).should eq( "one" )
     end
+    
+    it "accesses the second element" do
+      wrapper.get( 1 ).should eq( "two" )
+    end
+    
+  end # describe "simple without translation" do
 
-  end # describe "delegation to Forwardable#def_delegator"
-
-end # describe Forwarder
+end # describe Forwarder do

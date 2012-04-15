@@ -52,11 +52,12 @@ module Forwarder
     end
       
     def delegate_to_forwardee
-      forwardee.extend Forwardable
-      arguments.translation do | tltion |
-        forwardee.def_delegator arguments.target, tltion, arguments.message
-      end or
-        forwardee.def_delegator arguments.target, arguments.message
+      tltion = arguments.translation arguments.message
+      forwardee.module_eval(
+        "def #{arguments.message} *args, &blk; #{arguments.target}.#{tltion}( *args, &blk ) end",
+        __FILE__,
+        __LINE__
+      )
     end
 
     def initialize forwardee
