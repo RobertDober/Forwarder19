@@ -18,6 +18,13 @@ This software is released under the very liberal MIT license as indicated in the
 If you do not have the LICENSE file delivered the terms of the license are referred to here:
 http://www.opensource.org/licenses/mit-license.html
 
+## Performance
+
+Performance is _normal_, as it is for 'Forwardable' however the goal is to have delegated methods
+to run about as twice as fast as methods created by 'Forwardable.def_delegator'. This seems to be
+a realistic goal as can be seen here:
+
+
 ## Simple Delegation As In Forwardable
 
 ```ruby
