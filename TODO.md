@@ -1,7 +1,8 @@
 ## Make a spec for the last example in the README.
 
-### Shall we issue an error if there is an ivar spec in a chain after the first element
 
-### Optimize
+* Get functional test for compiler under way, expose unit test argument as mockery
 
-define_method is twice as slow as eval
+* Get rid of evaluable in arguments
+
+* Decide if Evaller is a service or a quality of Compiler
