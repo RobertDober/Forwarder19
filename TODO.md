@@ -1,13 +1,6 @@
 ## Make a spec for the last example in the README.
 
-
-### Implement features
-
-Make some very complete examples in acceptance tests
-
-#### Implement them with combing chain, AOP and custom target
-
-
+### Shall we issue an error if there is an ivar spec in a chain after the first element
 
 ### Optimize
 

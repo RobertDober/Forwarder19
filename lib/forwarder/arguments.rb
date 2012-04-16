@@ -1,3 +1,5 @@
+require 'forwarder/evaller'
+
 module Forwarder
   class Arguments
     attr_reader :args, :message, :target
@@ -34,6 +36,10 @@ module Forwarder
       @params[ :to_chain ]
     end
 
+    def complete_args *args
+      (self.args || []) + args
+    end
+
     def custom_target?
       @params[:to_object]
     end
@@ -42,8 +48,11 @@ module Forwarder
       !aop? && !custom_target? && !all? && !chain? && !args && !lambda?
     end
 
-    def complete_args *args
-      (self.args || []) + args
+    def evaluable?
+      !lambda? &&
+        !aop? &&
+        ( !args || args.all?{|a| Evaller.evaluable? a } ) &&
+        ( !custom_target? || Evaller.evaluable?( custom_target? ) )
     end
 
     def lambda default=nil
@@ -59,6 +68,10 @@ module Forwarder
     def object_target default
       return unless custom_target?
       target == :self ? default : target
+    end
+
+    def serialized_params
+      
     end
       
     def translation alternative=nil, &blk

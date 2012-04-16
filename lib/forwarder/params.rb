@@ -47,7 +47,12 @@ module Forwarder
     end
 
     def delegate_to_chain
-      Meta.new( forwardee, arguments ).forward_chain
+      tltion = arguments.translation arguments.message
+      forwardee.module_eval(
+        "def #{arguments.message} *args, &blk; #{arguments.target.join(".")}.#{tltion}( *args, &blk ) end",
+          __FILE__,
+          __LINE__
+      )
     end
 
     def delegate_object
@@ -59,7 +64,7 @@ module Forwarder
     def delegate_to_forwardee
       tltion = arguments.translation arguments.message
       forwardee.module_eval(
-        "def #{arguments.message} *args, &blk; #{arguments.target}.#{tltion}( *args, &blk ) end",
+        "def #{arguments.message} *args, &blk; #{arguments.target}.#{tltion}( #{arguments.serialized_params}*args, &blk ) end",
         __FILE__,
         __LINE__
       )
