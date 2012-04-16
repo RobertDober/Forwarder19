@@ -14,7 +14,31 @@ module Forwarder
       else
         cache[oi] = false
       end
-      
+    end
+
+    def serialize args
+      return "" if args.nil? || args.empty?
+      _serialize( args ).join(", ") + ", "
+    end
+
+    private
+    def _serialize args
+      args.map{ | arg |
+        _serialize_one arg
+      }
+    end
+
+    def _serialize_one arg
+      case arg
+      when String, Symbol, Fixnum, NilClass, FalseClass, TrueClass
+        arg.inspect
+      when Array
+        ["[ ", _serialize( arg ).join(", "), " ]"].join
+      when Hash
+        raise ArgumentError # implement later
+      else
+        raise ArgumentError
+      end
     end
   end # module Evaller
 end # module Forwarder

@@ -71,7 +71,7 @@ module Forwarder
     end
 
     def serialized_params
-      
+      Evaller.serialize args
     end
       
     def translation alternative=nil, &blk
