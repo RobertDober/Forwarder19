@@ -35,7 +35,9 @@ module Forwarder
 
     def _serialize_one arg
       case arg
-      when String, Symbol, Fixnum, NilClass, FalseClass, TrueClass
+      when String
+        "'" + arg + "'"
+      when Symbol, Fixnum, NilClass, FalseClass, TrueClass
         arg.inspect
       when Array
         ["[ ", _serialize( arg ).join(", "), " ]"].join

@@ -87,6 +87,12 @@ module Forwarder
       @__aop_values__ ||= @params.values_at( :after, :before ).compact
     end
 
+    def check_for_incompatibilities!
+      raise ArgumentError, "cannot provide translations for forward_all" if @__all__ && translation
+      raise ArgumentError, "cannot provide arguments for forward_all" if @__all__ && args?
+
+    end
+
     def initialize *args, &blk
       @message = args.shift
       raise ArgumentError, "need one message and a hash of kwd params, plus an optional block" unless args.size == 1 && args.first.is_a?( Hash )
@@ -94,6 +100,7 @@ module Forwarder
       set_message
       set_target
       set_args blk
+      check_for_incompatibilities!
     end
 
     def set_args blk
