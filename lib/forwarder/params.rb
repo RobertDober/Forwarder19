@@ -9,7 +9,7 @@ module Forwarder
       if compiled
         forwardee.module_eval compiled, __FILE__, __LINE__
       else
-        Meta.new( forwardee, arguments ).forward
+        general_delegate
       end
     end
 
@@ -81,7 +81,14 @@ module Forwarder
       @forwardee = forwardee
     end
 
-#     def general_delegate
-#     end
+    def general_delegate
+      if arguments.chain?
+        Meta.new( forwardee, arguments ).forward_chain
+      elsif arguments.custom_target?
+        Meta.new( forwardee, arguments ).forward_object
+      else
+        Meta.new( forwardee, arguments ).forward
+      end
+    end
   end # class Params
 end # module Forwarder

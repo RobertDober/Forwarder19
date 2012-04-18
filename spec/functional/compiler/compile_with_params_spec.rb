@@ -9,32 +9,19 @@ describe Forwarder::Compiler do
     described_class.new( arguments )
   end
 
-  describe "compiles correctly" do
+  describe "compiles correctly with args" do
 
     after :each do
       subject.compile.should eq( expected_string )
     end
 
     describe "for simple delegation" do
-      args
-      expect_compilation_to_be "def hello *args, &blk; world.howdy( *args, &blk ) end"
+      args args?: true, args: [42]
+      expect_compilation_to_be "def hello *args, &blk; world.howdy( 42, *args, &blk ) end"
       it{}
     end # describe "for simple delegation"
 
-    describe "for chain delegation" do
-      args chain?: true, target: %w{@a b}
-      expect_compilation_to_be "def hello *args, &blk; @a.b.howdy( *args, &blk ) end"
-      it {}
-    end # describe "for chain delegation"
 
-    describe "for simple delegation to many" do
-      args message: %w{a b}, translation: nil
-      expect_compilation_to_be [
-          "def a *args, &blk; world.a( *args, &blk ) end",
-          "def b *args, &blk; world.b( *args, &blk ) end"
-        ].join("\n")
-      it{}
-    end # describe "for simple delegation"
 
   end # describe compile simple delegation
 
