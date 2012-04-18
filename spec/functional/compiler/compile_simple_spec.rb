@@ -18,13 +18,11 @@ describe Forwarder::Compiler do
     describe "for simple delegation" do
       args
       expect_compilation_to_be "def hello *args, &blk; world.howdy( *args, &blk ) end"
-      it{}
     end # describe "for simple delegation"
 
     describe "for chain delegation" do
       args chain?: true, target: %w{@a b}
       expect_compilation_to_be "def hello *args, &blk; @a.b.howdy( *args, &blk ) end"
-      it {}
     end # describe "for chain delegation"
 
     describe "for simple delegation to many" do
@@ -33,7 +31,6 @@ describe Forwarder::Compiler do
           "def a *args, &blk; world.a( *args, &blk ) end",
           "def b *args, &blk; world.b( *args, &blk ) end"
         ].join("\n")
-      it{}
     end # describe "for simple delegation"
 
   end # describe compile simple delegation
@@ -48,7 +45,7 @@ describe Forwarder::Compiler do
       it{ subject.compile.should be_nil }
     end # describe "if there is a lambda"
     describe "if there are args" do
-      args args?: true
+      args args?: true, args: [Object.new]
       it{ subject.compile.should be_nil }
     end # describe "if there is a lambda"
     describe "if there is a custom target" do

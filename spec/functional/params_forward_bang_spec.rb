@@ -7,7 +7,7 @@ describe Forwarder::Params do
   end
 
   let :args do
-    double "arguments"
+    double("arguments", chain?: false, custom_target?: false)
   end
 
   subject do

@@ -18,6 +18,7 @@ module ArgumentStubber
 
     def expect_compilation_to_be compiled
       let :expected_string do compiled  end
+      it{}
     end
   end
 end # module ArgumentStubber

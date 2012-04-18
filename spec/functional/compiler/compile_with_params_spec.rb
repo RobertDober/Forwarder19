@@ -16,10 +16,13 @@ describe Forwarder::Compiler do
     end
 
     describe "for simple delegation" do
-      args args?: true, args: [42]
-      expect_compilation_to_be "def hello *args, &blk; world.howdy( 42, *args, &blk ) end"
-      it{}
+      args args?: true, args: [42], translation: "hello"
+      expect_compilation_to_be "def hello *args, &blk; world.hello( 42, *args, &blk ) end"
     end # describe "for simple delegation"
+    describe "for translated delegation with more args" do
+      args args?: true, args: ["hello", :world]
+      expect_compilation_to_be %{def hello *args, &blk; world.howdy( "hello", :world, *args, &blk ) end}
+    end # describe "for translated delegation with array args"
 
 
 
@@ -35,7 +38,7 @@ describe Forwarder::Compiler do
       it{ subject.compile.should be_nil }
     end # describe "if there is a lambda"
     describe "if there are args" do
-      args args?: true
+      args args?: true, args: [Object.new]
       it{ subject.compile.should be_nil }
     end # describe "if there is a lambda"
     describe "if there is a custom target" do

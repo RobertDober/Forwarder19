@@ -1,5 +1,8 @@
 module Forwarder
   module Evaller extend self
+
+    NotSerializable = Class.new RuntimeError
+
     def evaluable? an_object, cache={}
       oi = an_object.object_id
       return cache[oi] if cache.has_key? oi
@@ -19,6 +22,8 @@ module Forwarder
     def serialize args
       return "" if args.nil? || args.empty?
       _serialize( args ).join(", ") + ", "
+    rescue NotSerializable
+      nil
     end
 
     private
@@ -35,9 +40,9 @@ module Forwarder
       when Array
         ["[ ", _serialize( arg ).join(", "), " ]"].join
       when Hash
-        raise ArgumentError # implement later
+        raise NotSerializable # implement later
       else
-        raise ArgumentError
+        raise NotSerializable
       end
     end
   end # module Evaller
