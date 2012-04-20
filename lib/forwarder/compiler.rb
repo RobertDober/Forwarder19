@@ -7,7 +7,8 @@ module Forwarder
     def compile
       # Cannot compile because of intrinsic uncompilable traits of arguments
       # TODO: implement compilable inside arguments
-      return unless !arguments.lambda? && !arguments.aop? && !arguments.custom_target?
+#      return unless !arguments.lambda? && !arguments.aop? && !arguments.custom_target?
+      return if arguments.must_not_compile?
       # Cannot compile because arguments cannot be compiled
       @compiled_args = Evaller.serialize arguments.args
       return unless @compiled_args

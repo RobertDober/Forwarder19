@@ -30,22 +30,9 @@ describe Forwarder::Compiler do
 
   describe "does not compile" do
     describe "if there is a lambda" do
-      args lambda?: true
+      args must_not_compile?: true
       it{ subject.compile.should be_nil }
     end # describe "if there is a lambda"
-    describe "if there is aop" do
-      args aop?: true
-      it{ subject.compile.should be_nil }
-    end # describe "if there is a lambda"
-    describe "if there are args" do
-      args args?: true, args: [Object.new]
-      it{ subject.compile.should be_nil }
-    end # describe "if there is a lambda"
-    describe "if there is a custom target" do
-      args custom_target?: true
-      it{ subject.compile.should be_nil }
-
-    end # describe "if there is a custom target"
   end # describe "does not compile"
 
 end # describe Forwarder::Params

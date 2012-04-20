@@ -63,6 +63,10 @@ module Forwarder
       @lambda
     end
 
+    def must_not_compile?
+      lambda? || aop? || custom_target?
+    end
+
     # This is always nil unless we are a custom_target, in which case
     # default is returned if target is :self, else target is returned
     def object_target default
