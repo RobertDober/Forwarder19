@@ -21,7 +21,7 @@ describe Forwarder::Compiler do
     end # describe "for simple delegation"
     describe "for translated delegation with more args" do
       args args?: true, args: ["hello", :world]
-      expect_compilation_to_be %{def hello *args, &blk; world.howdy( "hello", :world, *args, &blk ) end}
+      expect_compilation_to_be %{def hello *args, &blk; world.howdy( 'hello', :world, *args, &blk ) end}
     end # describe "for translated delegation with array args"
 
 

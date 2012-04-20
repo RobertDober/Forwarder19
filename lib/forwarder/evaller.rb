@@ -4,19 +4,9 @@ module Forwarder
     NotSerializable = Class.new RuntimeError
 
     def evaluable? an_object, cache={}
-      oi = an_object.object_id
-      return cache[oi] if cache.has_key? oi
-      case an_object
-      when String, Symbol, Fixnum
-        cache[oi] = true
-      when Array
-        cache[oi] =
-          an_object.all?{ |e| evaluable? e }
-      when Hash
-        cache[oi] = false # recurse into Hash in later versions
-      else
-        cache[oi] = false
-      end
+      !!_serialize_one( an_object, cache )
+    rescue NotSerializable
+      false
     end
 
     def serialize args
@@ -47,15 +37,19 @@ module Forwarder
         "'" + arg + "'"
       when Symbol, Fixnum, NilClass, FalseClass, TrueClass
         arg.inspect
+      else
+        _serialize_object arg, cache
+      end
+    end
+
+    def _serialize_object arg, cache
+      oid = arg.object_id
+      raise NotSerializable if cache[oid]
+      cache[oid]=true
+      case arg
       when Array
-        oid = arg.object_id
-        raise NotSerializable if cache[oid]
-        cache[oid]=true
         ["[ ", serialize_without_arg_suffix( arg, cache ).join(", "), " ]"].join
       when Hash
-        oid = arg.object_id
-        raise NotSerializable if cache[oid]
-        cache[oid]=true
         [ "{ ", _serialize_hash( arg, cache ), " }" ].join
       else
         raise NotSerializable
