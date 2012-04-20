@@ -21,28 +21,42 @@ module Forwarder
 
     def serialize args
       return "" if args.nil? || args.empty?
-      _serialize( args ).join(", ") + ", "
+      serialize_without_arg_suffix( args ).join(", ") + ", "
     rescue NotSerializable
       nil
     end
 
-    private
-    def _serialize args
+    def serialize_without_arg_suffix args, cache={}
       args.map{ | arg |
-        _serialize_one arg
+        _serialize_one arg, cache
       }
     end
 
-    def _serialize_one arg
+    private
+    def _serialize_hash hsh, cache
+      hsh.inject [] do | r, (k, v) |
+        k = _serialize_one k, cache
+        v = _serialize_one v, cache
+        r << "#{k} => #{v}"
+      end.join( ", ")
+    end
+
+    def _serialize_one arg, cache
       case arg
       when String
         "'" + arg + "'"
       when Symbol, Fixnum, NilClass, FalseClass, TrueClass
         arg.inspect
       when Array
-        ["[ ", _serialize( arg ).join(", "), " ]"].join
+        oid = arg.object_id
+        raise NotSerializable if cache[oid]
+        cache[oid]=true
+        ["[ ", serialize_without_arg_suffix( arg, cache ).join(", "), " ]"].join
       when Hash
-        raise NotSerializable # implement later
+        oid = arg.object_id
+        raise NotSerializable if cache[oid]
+        cache[oid]=true
+        [ "{ ", _serialize_hash( arg, cache ), " }" ].join
       else
         raise NotSerializable
       end

@@ -39,7 +39,25 @@ describe Forwarder::Evaller do
     it "can descend into hashes and arrays" do
       described_class
         .serialize( [{ a: 42, b: [ "a", {c: 44} ], c: {d:4, e:5} }, ["a"], {}] )
-        .should eq( "{ :a => 42, :b => [ 'a', { :c => 44 } ], :c => { :d => 4, :e => 5 } }, [ 'a' ], {}, " )
+        .should eq( "{ :a => 42, :b => [ 'a', { :c => 44 } ], :c => { :d => 4, :e => 5 } }, [ 'a' ], {  }, " )
+    end
+
+    it "detects recursion in the datastructure" do
+      x = {  }
+      x.update( a: x )
+      described_class
+        .serialize( [x] )
+        .should be_nil
+    end
+    it "does not detect recursion for primitive types..." do
+      described_class
+        .serialize( [ { a: true, b: 42, c: nil, d: { a: 42, b: true, c: [ nil ] } } ] )
+        .should eq( "{ :a => true, :b => 42, :c => nil, :d => { :a => 42, :b => true, :c => [ nil ] } }, " )
+    end
+    it "...nor for symbols" do
+      described_class
+        .serialize( [ { a: :a, b: 42, c: nil, d: { a: 42, b: :a, c: [ :a, 42 ] } } ] )
+        .should eq( "{ :a => :a, :b => 42, :c => nil, :d => { :a => 42, :b => :a, :c => [ :a, 42 ] } }, " )
     end
     it "raises an error if params cannot be serialized" do
       described_class
