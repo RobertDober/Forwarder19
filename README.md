@@ -403,7 +403,7 @@ A different helper can do this job without any ambiguity:
 
 
 ```ruby
-  map( &applyto( :some_method ) )
+  map( &applying( :some_method ) )
 ```
 
 ### Commonly Used Pattern Helpers

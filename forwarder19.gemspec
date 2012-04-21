@@ -19,7 +19,7 @@ Performance will be pushed to 2~3 times of Fowardable with the 0.2 branch of thi
   s.homepage    = 'https://github.com/RobertDober/Forwarder19'
   s.licenses    = %w{MIT}
 
-  s.add_dependency 'lab419_core', '~> 0.0.1'
+  s.add_dependency 'lab419_core', '~> 0.0.3'
 
   s.add_development_dependency 'ruby-debug19', '~> 0.11'
 
