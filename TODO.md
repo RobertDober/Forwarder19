@@ -1,6 +1,9 @@
-## Make a spec for the last example in the README.
+# Implement to_hash
 
+## Acceptence Specs finished
 
-* Add tests for complex paramter serialization
+## Get down into unit (functional if needed) specs
 
-* Refactor
+# Use Byte code compilation
+
+# Check if attr can be made faster by bytecode compilation
