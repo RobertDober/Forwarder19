@@ -96,6 +96,36 @@ one parameter. This becomes clearer with an example.
            with: [ /[,.]\b/, '\& ' ]
 ```
 
+### A Useful Shorthand
+
+As I found myself using the following idioms all the time
+
+```ruby
+
+  forward :some_method, to: :@some_hash, as: :[], with: :some_method
+  forward :other_method, to: :hash, as: :[], with: :other_key
+
+```
+
+I conceived the `to_hash` shortcut for these. Strictly spoken (and not striktly spoken
+too) this is a gross generalisation of the usecase as if they target had to be a `Hash`
+all the time. This is not the case of course, we are just forwarding a message with a
+parameter...
+
+Here is how the above idioms can be expressed by means of the `to_hash` target:
+
+```ruby
+
+   forward :some_method, to_hash: :@some_hash
+   forward :other_method, to_hash: :hash, as: :other_key
+
+```
+
+Concerning jargon we are doing something a little bit confusing here. In all cases we have
+an implicit translation (which is `:[]` of course). In the second case we have an explicit
+translation (being `:other_key`) too. The explicit translation is transformed into the first,
+and only argument, as we do not allow other arguments in this case.
+
 ### Partial Application
 
 This example gives us the oppurtunity to look at a use case for partial applications. Let us assume that

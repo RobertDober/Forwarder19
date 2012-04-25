@@ -18,10 +18,6 @@ describe Forwarder::Arguments do
       subject.target.should eq( target )
     end
     
-    it "cannot delegate with Forwardable" do
-      should_not be_delegatable
-    end
-
     it "cannot delegate to all" do
       should_not be_all
     end
@@ -57,10 +53,6 @@ describe Forwarder::Arguments do
       subject.translation.should eq( translation )
     end
     
-    it "cannot delegate with Forwardable" do
-      should_not be_delegatable
-    end
-
     it "cannot delegate to all" do
       should_not be_all
     end

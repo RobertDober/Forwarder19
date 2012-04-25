@@ -24,6 +24,10 @@ describe Forwarder::Arguments do
       it 'raises for arguments in many messages' do
         ->{ described_class.new [:a, :b], to: :hello, with: 42 }.should raise_error( ArgumentError, /cannot provide arguments/ )
       end
+      it 'raises for arguments and a to_hash: target' do
+        ->{ described_class.new :a, to_hash: :b, with: :c }.should raise_error( ArgumentError, /cannot provide arguments/ )
+        
+      end
     end # describe "wrong arg semantics"
   end # describe ArgumentError
 end # describe Forwarder::Arguments do

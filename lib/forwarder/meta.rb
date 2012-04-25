@@ -4,7 +4,6 @@ module Forwarder
 
     attr_reader :arguments, :forwardee
 
-
     # TODO: Break AOP out of this so that we do not check @ runtime
     def forward
       if arguments.aop?

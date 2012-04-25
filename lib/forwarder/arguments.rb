@@ -44,9 +44,9 @@ module Forwarder
       @params[:to_object]
     end
 
-    def delegatable?
-      !aop? && !custom_target? && !all? && !chain? && !args && !lambda?
-    end
+#     def delegatable?
+#       !aop? && !custom_target? && !all? && !chain? && !args && !lambda?
+#     end
 
     def evaluable?
       !lambda? &&
@@ -94,7 +94,7 @@ module Forwarder
     def check_for_incompatibilities!
       raise ArgumentError, "cannot provide translations for forward_all" if @__all__ && translation
       raise ArgumentError, "cannot provide arguments for forward_all" if @__all__ && args?
-
+      raise ArgumentError, "cannot provide arguments for to_hash:" if @params[:to_hash] && args?
     end
 
     def initialize *args, &blk
@@ -105,6 +105,7 @@ module Forwarder
       set_target
       set_args blk
       check_for_incompatibilities!
+      translate_to_hash
     end
 
     def set_args blk
@@ -124,9 +125,9 @@ module Forwarder
     def set_args_normal
       case arg = @params[:with]
       when Array
-        @args = arg.dup
+        @args = arg.dup rescue arg
       else
-        @args = [ arg ]
+        @args = [ (arg.dup rescue arg) ]
       end
     end
 
@@ -152,7 +153,7 @@ module Forwarder
     end
 
     def set_target
-      [:to, :to_chain, :to_object].each do | tgt_kwd |
+      [:to, :to_chain, :to_object, :to_hash].each do | tgt_kwd |
         tgt = @params[ tgt_kwd ]
         next unless tgt
 
@@ -162,6 +163,11 @@ module Forwarder
       raise ArgumentError, "no target specified." unless @target
     end
 
+    def translate_to_hash
+      return unless @params[:to_hash]
+      set_args_normal translation message
+      @params[:as] = :[]
+    end
     def use_block?
       aop_values.include?( :use_block )
     end

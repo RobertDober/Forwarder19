@@ -30,6 +30,14 @@ describe Forwarder::Arguments do
       described_class.new( :message, to: :target, as: :[], with: 1 ).should be_evaluable
     end
 
+    it "simple forward to hash without translation should be evaluable" do
+      described_class.new( :access, to_hash: :some_hash ).should be_evaluable
+    end
+
+    it "simple forward to hash with translation should be evaluable" do
+      described_class.new( :access, to_hash: :some_hash, as: :some_key ).should be_evaluable
+    end
+
     it "chain forward with evaluable parameters is evaluable" do
       described_class.new( :message, to_chain: %w{a @b}, with: "hello" ).should be_evaluable
     end

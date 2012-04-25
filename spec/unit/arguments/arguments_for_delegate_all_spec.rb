@@ -18,10 +18,6 @@ describe Forwarder::Arguments do
       subject.target.should eq( target )
     end
     
-    it "does not delegate normally" do
-      should_not be_delegatable
-    end
-
     it "does not have a message" do
       subject.message.should eq( %w{two messages} )
     end

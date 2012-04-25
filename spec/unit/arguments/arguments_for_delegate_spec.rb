@@ -22,10 +22,6 @@ describe Forwarder::Arguments do
       subject.target.should eq( target )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
-    end
-
     it "cannot delegate to all" do
       should_not be_all
     end
@@ -49,10 +45,6 @@ describe Forwarder::Arguments do
       subject.translation.should eq( translation )
     end
     
-    it "can delegate with Forwardable" do
-      should be_delegatable
-    end
-
     it "does not have any aop" do
       should_not be_aop
     end
