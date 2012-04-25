@@ -19,16 +19,16 @@ describe Forwarder::Arguments do
         subject.target.should eq( target )
       end
 
-      it "has an - implicit - translation" do
-        subject.translation.should eq( :[] )
+      it "does not have an implicit translation" do
+        subject.translation.should be_nil
       end
 
-      it "has arguments (to the implicit translation)" do
-        should be_args
+      it "has no arguments" do
+        should_not be_args
       end
       
-      it "has the message as argument" do
-        subject.args.should eq( [message ] )
+      it "is to_hash" do
+        should be_to_hash
       end
     end # describe "simple"
     
@@ -46,14 +46,33 @@ describe Forwarder::Arguments do
       end
 
       it "has an - implicit - translation" do
-        subject.translation.should eq( :[] )
+        subject.translation.should eq( :alpha )
       end
 
-      it "has arguments (to the implicit translation)" do
-        should be_args
+      it "has no arguments" do
+        should_not be_args
       end
-      it "has the - explicit - translation as argument" do
-        subject.args.should eq( [ :alpha ] )
+    end # describe "simple"
+    describe "all" do
+      
+      subject do
+        described_class.new( [:m1, :m2], to_hash: target )
+      end
+
+      it "has the correct message" do
+        subject.message.should eq( [:m1, :m2] )
+      end
+
+      it "has the correct target" do
+        subject.target.should eq( target )
+      end
+
+      it "has an - implicit - translation" do
+        subject.translation.should be_nil
+      end
+
+      it "does not have arguments" do
+        should_not be_args
       end
     end # describe "simple"
   end # describe :to_hash

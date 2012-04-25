@@ -11,6 +11,7 @@ module ArgumentStubber
                     chain?: false,
                     translation: "howdy",
                     target: :world,
+                    to_hash?: nil,
                     must_not_compile?: false,
                     message: :hello}.merge( keys )
                  )

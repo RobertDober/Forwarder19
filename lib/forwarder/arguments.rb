@@ -78,6 +78,10 @@ module Forwarder
       Evaller.serialize args
     end
       
+    def to_hash?
+      @__to_hash__ ||= @params[ :to_hash ]
+    end
+
     def translation alternative=nil, &blk
       @params[ :as ].tap do | tltion |
         break alternative unless tltion
@@ -94,7 +98,6 @@ module Forwarder
     def check_for_incompatibilities!
       raise ArgumentError, "cannot provide translations for forward_all" if @__all__ && translation
       raise ArgumentError, "cannot provide arguments for forward_all" if @__all__ && args?
-      raise ArgumentError, "cannot provide arguments for to_hash:" if @params[:to_hash] && args?
     end
 
     def initialize *args, &blk
@@ -113,8 +116,10 @@ module Forwarder
       hw = @params.has_key? :with
       ha = @params.has_key? :with_ary
       raise ArgumentError, "cannot use :with and :with_ary parameter" if hw && ha
-      set_args_normal if hw
-      set_args_ary if ha
+      unless to_hash?
+        set_args_normal if hw
+        set_args_ary if ha
+      end
     end
 
     def set_args_ary
@@ -165,8 +170,7 @@ module Forwarder
 
     def translate_to_hash
       return unless @params[:to_hash]
-      set_args_normal translation message
-      @params[:as] = :[]
+      raise ArgumentError, "cannot provide arguments for to_hash:" if @params.has_key?( :with ) || @params.has_key?( :with_ary )
     end
     def use_block?
       aop_values.include?( :use_block )

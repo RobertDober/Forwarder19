@@ -25,6 +25,10 @@ describe Forwarder::Arguments do
     it "cannot delegate to all" do
       should_not be_all
     end
+
+    it "is not to_hash" do
+      should_not be_to_hash
+    end
   end # describe 'without translation'
 
   describe 'with translation' do
