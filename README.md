@@ -124,7 +124,24 @@ Here is how the above idioms can be expressed by means of the `to_hash` target:
 Concerning jargon we are doing something a little bit confusing here. In all cases we have
 an implicit translation (which is `:[]` of course). In the second case we have an explicit
 translation (being `:other_key`) too. The explicit translation is transformed into the first,
-and only argument, as we do not allow other arguments in this case.
+and only argument, as we do not allow explicit arguments for `to_hash:` targets.
+
+However you still can use the `forward_all` version and a `to_hash:` chain target, here is
+an example:
+
+```ruby
+
+   class Params
+     extend Forwarder
+     forward_all :count, :limit, to_hash: [:@params, :mandatory]
+     forward :pretend?, to_hash: [:@params, :optional], as: :dry_run
+   end
+
+```
+
+AOP is not supported for `to_hash:` targets in this version, this might change in the future
+as use cases are imaginable (e.g. an after filter for the `:pretend?` method, applying !! to
+the result).
 
 ### Partial Application
 
