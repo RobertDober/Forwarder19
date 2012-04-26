@@ -75,24 +75,18 @@ describe Forwarder do
     end
   end # describe "hash keys are irrelevant (and ressitance, of course is futile)"
 
-#   describe "who am I to decide on keys" do
-#     let_forwarder_instance :wrapper, hash: {a: 42, b:43, c:44} do
-#       attr_reader :hash
-#       forward_all :c, :d, to_hash: :hash, key_required: true
-#     end
-# 
-#     it "can still access c" do
-#       wrapper.c.should eq( 44 )
-#     end
-# 
-#     it "raises an IndexError for d though" do
-#       ->{ wrapper.d }.should raise_error( IndexError )
-#     end
-#     
-#     it "which can be remedied (sp?) by defining the key of course" do
-#       wrapper.hash[:d] = nil
-#       wrapper.d.should be_nil
-#     end
-#   end # describe "who am I to decide on keys"
 
+  describe "forward to hash with translations" do
+    let_forwarder_instance :wrapper, hash: {a: 42} do
+      forward :b, to_hash: :@hash, as: :a
+    end
+    
+    it 'accesses a' do
+      wrapper.b.should eq( 42 )
+    end
+
+    it 'however a is not defined' do
+      ->{ wrapper.a }.should raise_error( NoMethodError ) 
+    end
+  end # describe "forward to hash with translations"
 end # describe Forwarder do

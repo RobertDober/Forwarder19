@@ -39,11 +39,13 @@ module Forwarder
     end
 
     def compile_to_hash
+      target = arguments.to_hash?
+      target = target.join(".") if Array === target
       [arguments.message]
         .flatten
         .map do | msg |
           # N.B. that the expression between [] is always a Symbol
-          "def #{msg}; #{arguments.to_hash?}[ #{(arguments.translation||msg).to_sym.inspect} ] end"
+          "def #{msg}; #{target}[ #{(arguments.translation||msg).to_sym.inspect} ] end"
         end.join("\n")#.tap do |x| debugger end
     end
 
