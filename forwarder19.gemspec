@@ -4,14 +4,13 @@ Gem::Specification.new do |s|
   s.name        = 'forwarder19'
   s.version     = Forwarder::VERSION 
   s.summary     = "Delegation And AOP Filters For It"
-  s.description = %{Ruby's core Forwardable gets the job done(barely) and produces most unreadable code. Furthermore it is about twice as slow (1.9.2-p290) or thrice as slow (1.9.3-p0) as it needs to be.
+  s.description = %{Ruby's core Forwardable gets the job done(barely) and produces most unreadable code. 
 
-This is a nonintrusive (as is Forwardable) module that allows to delegate methods to instance variables,
-objects returned by instance_methods, other methods of the same receiver, the receiver itself, a chain of messages or
-an arbitrary object. Paramters can be provided in the forwarding definition (parially or totally=.
-It also defines some AOP support as after and before filters.
+  Forwarder19 not only is more readable, much more feature rich, but also slightly faster, meaning you can use it without performance penalty.
 
-Performance will be pushed to 2~3 times of Fowardable with the 0.2 branch of this gem}
+  Additional features include: providing arguments, (partially if needed), AOP and custom forwarding to hashes
+  }
+
   s.authors     = ["Robert Dober"]
   s.email       = 'robert.dober@gmail.com'
   s.files       = Dir.glob("lib/**/*.rb")

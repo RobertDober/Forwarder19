@@ -20,10 +20,7 @@ http://www.opensource.org/licenses/mit-license.html
 
 ## Performance
 
-Performance is _normal_, as it is for 'Forwardable'. 
-However the 0.2 branch reduced execution time to 85~95% of Forwardable by evalling strings whenever possible.
-The goal of the 0.3 branch is to get the same execution time as if whe had declared the method by hand, by
-means of evalling a compiled bytecode.
+Execution time is that of 85~95% of Forwardable by evalling strings whenever possible.
 
 
 ## Simple Delegation As In Forwardable
