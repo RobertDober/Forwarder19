@@ -1,3 +1,3 @@
 module Forwarder
-  VERSION = '0.2.0rc5'
+  VERSION = '0.2.0'
 end # module Forwarder
