@@ -1,5 +1,8 @@
 require 'forwarder/evaller'
 module Forwarder
+  # The compiler's responsability is to create a string representation of
+  # the delegation method, or to nil if no such string representation exists
+  # and delegation has to be done dynamically.
   class Compiler
     attr_reader :arguments
 
@@ -11,10 +14,8 @@ module Forwarder
       # To Hash can always compile
       return compile_to_hash if arguments.to_hash?
 
-      # Cannot compile because arguments cannot be compiled
-      @compiled_args = Evaller.serialize arguments.args
-
       # Cannot compile only because the arguments.args cannot be compiled
+      @compiled_args = Evaller.serialize arguments.args
       return unless @compiled_args
 
       # Can compile :)))

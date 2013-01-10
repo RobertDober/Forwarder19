@@ -3,7 +3,7 @@ $:.unshift lib_path
 require 'forwarder'
 
 def let_forwarder_instance let_name, values={}, &blk
-  let let_name do
+  let! let_name do
     Class.new do
       values.keys.each do | k |
         attr_accessor k

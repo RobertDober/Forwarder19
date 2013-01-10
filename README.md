@@ -147,26 +147,42 @@ we do not always use whitespaces, than we can leave the second paramter to be pr
 of the defined forwarder proxy.
 
 ```ruby
-   forward :add_whitespace_to_punctuation,
+   forward :add_something_to_punctuation,
            to:   :name,
            as:   :gsub!,
-           with: /[,.]\b/
+           with: /([,.])\b/
 ```
 
 We can achieve the same as above with the following invocation
 
 ```ruby
-  o = Name.new( "the,quick, fox." )
-  o.add_whitespace_to_punctuation( '\1 ' )
+   o = Name.new( "the,quick, fox." )
+   o.add_something_to_punctuation( '\1 ' )
   # name: "the, quick, fox." )
 ```
 
 but we can also add a hyphen after interpunctations with this invocation 
 
 ```ruby
-  o = Name.new( "the,quick, fox." )
-  o.add_whitespace_to_punctuation( '\1- ' )
+   o = Name.new( "the,quick, fox." )
+   o.add_something_to_punctuation( '\1- ' )
   # name: "the,- quick,- fox." )
+```
+
+But more importantely we can forward to the partial application, thus using the 
+partial application as a mean of composition
+
+```ruby
+   forward :add_ws_to_punctuation,
+           to_object: :self,
+           as: :add_something_to_punctuation,
+           with: '\1 '
+
+   forward :add_hypen_to_punctuation,
+           to_object: self,
+           as: :add_something_to_punctuation,
+           with_block: ->(*grps){ "#{grps.first}- " }
+ 
 ```
 
 ### Passing One Array

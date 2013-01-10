@@ -7,25 +7,42 @@ require 'spec_helper'
 
 describe Forwarder do
   describe "partial application" do
-    let_forwarder_instance :wrapper, :str => "the,quick, brown.fox." do
-      forward :add_to_punctuation,
-              to: :@str,
-              as: :gsub!,
-              with: /[,.]\b/
+    let( :str ){ "the,quick, brown.fox." }
+    let :klass do
+      Struct.new :str do
+        extend Forwarder
+        forward :add_to_punctuation,
+          to: :str,
+          as: :gsub!,
+          with: /([,.])\b/
 
-      forward :add_ws_to_punctuation,
-              to: :add_to_punctuation,
-              with: '\1 '
+        forward :add_ws_to_punctuation,
+          to_object: :self,
+          as: :add_to_punctuation,
+          with: '\1 '
+
+        forward :add_ws_to_punctuation_block,
+          to_object: :self,
+          as: :add_to_punctuation,
+          with_block: ->(*gps){ "#{gps.first} " }
+      end
+    end
+    before do
+      @wrapper = klass.new str.dup
     end
 
     it "adds strings where needed" do
-      wrapper.add_to_punctuation( "***" )
-      wrapper.str.should eq( "the***quick, brown***fox." )
+      @wrapper.add_to_punctuation( "***" )
+      @wrapper.str.should eq( "the***quick, brown***fox." )
     end
 
     it "can be a forwarding target" do
-      wrapper.add_ws_to_punctuation
-      wrapper.str.should eq( 'the, quick, brwon. fox.r' )
+      @wrapper.add_ws_to_punctuation
+      @wrapper.str.should eq( 'the, quick, brown. fox.' )
+    end
+    it "can be a forwarding target (adding a block)" do
+      @wrapper.add_ws_to_punctuation_block
+      @wrapper.str.should eq( 'the, quick, brown. fox.' )
     end
   end # describe "passing more parameters"
 end
