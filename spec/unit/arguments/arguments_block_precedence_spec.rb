@@ -21,7 +21,7 @@ describe Forwarder::Arguments do
   end # describe 'no block at all'
 
   describe 'only a block' do
-    subject{ described_class.new message, to: target, do end }
+  subject{ described_class.new message, to: target do end }
     it "has a lambda" do
       should be_lambda
     end

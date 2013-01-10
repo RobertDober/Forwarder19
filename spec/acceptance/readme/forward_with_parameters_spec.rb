@@ -31,20 +31,6 @@ describe Forwarder do
     end
   end # describe "passing more parameters"
 
-  describe "partial application" do
-    let_forwarder_instance :wrapper, :str => "the,quick, brown.fox." do
-      forward :add_whitespace_to_punctuation,
-              to: :@str,
-              as: :gsub!,
-              with: /[,.]\b/
-    end
-
-    it "adds strings where needed" do
-      wrapper.add_whitespace_to_punctuation( "***" )
-      wrapper.instance_variable_get( :@str ).should eq( "the***quick, brown***fox." )
-    end
-  end # describe "passing more parameters"
-
   describe "passing one array" do
     describe "wrapped into another one" do
       let_forwarder_instance :wrapper, :ary => %w{Hello} do

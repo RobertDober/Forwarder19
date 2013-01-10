@@ -1,6 +1,7 @@
 require 'forwarder/arguments'
 require 'forwarder/compiler'
 require 'forwarder/meta'
+
 module Forwarder
   class Params
     attr_reader :forwardee, :arguments
