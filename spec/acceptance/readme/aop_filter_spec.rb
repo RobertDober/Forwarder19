@@ -24,15 +24,15 @@ describe Forwarder do
       it "gets 3 for max_value2" do
         wrapper.max_value2( 1, 2, 3 ).should eq( 30 )
       end
-      
+
       it "gets 3 for max_value3" do
         wrapper.max_value3( 1, 2, 3 ).should eq( 30 )
       end
-      
+
     end # describe :after
 
     describe :before do
-      
+
       let_forwarder_instance :wrapper, hash: { 1 => 30, 2 => 20, 3 => 10 } do
         forward :value_of_max1, to: :@hash, as: :[], before: lambda{ |*args| args.max }
         forward :value_of_max2, to: :@hash, as: :[], before: :use_block do | *args |
@@ -60,17 +60,52 @@ describe Forwarder do
 
       let_forwarder_instance :wrapper, ary: [*0..9] do
         forward :odd_doubled_sum,
-                to: :@ary,
-                as: :values_at, 
-                before: select_odd,
-                after: :use_block do |e|
-                  e.inject(0,&Integer.sum)
-                end
+          to: :@ary,
+          as: :values_at, 
+          before: select_odd,
+          after: :use_block do |e|
+          e.inject(0,&Integer.sum)
+          end
       end
 
       it "sums correctly" do
         wrapper.odd_doubled_sum(1, 2, 3).should eq( 4 )
       end
     end # describe "after and before"
+
+    describe "state in after and before" do 
+      init_state =
+        ->{self.state = 1;[]}
+
+      context "standard forward" do
+        let_forwarder_instance :target, state: nil do
+          forward :object_id, to: :state, # A NOP
+            before: init_state,
+            after: :use_block do
+            self.state += 1
+            end
+        end
+        it "executes all blox in the correct context" do
+          target.object_id
+          target.state.should == 2
+        end
+
+      end # context "forward to object"
+      context "forward to object" do
+        let_forwarder_instance :target, state: nil do
+          forward :object_id, to_object: Object, # A NOP
+            before: init_state,
+            after: :use_block do
+            self.state += 1
+            end
+        end
+        it "executes all blox in the correct context" do
+          target.object_id
+          target.state.should == 2
+        end
+
+      end # context "forward to object"
+
+    end # describe "state in after and before", :wip
   end # describe "AOP"
 end # describe Forwarder do

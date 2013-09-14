@@ -20,12 +20,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'lab419_core', '~> 0.0.3'
 
-  s.add_development_dependency 'ruby-debug19', '~> 0.11'
+  s.add_development_dependency 'pry', '~> 0.9'
 
-  s.add_development_dependency 'rake', '~> 0.9.2.2'
   s.add_development_dependency 'rspec', '~> 2.9.0'
-  s.add_development_dependency 'maruku', '~> 0.6.0'
-  s.add_development_dependency 'wirble', '~> 0.1.3'
 
-  s.required_ruby_version = '>= 1.9.2'
+  s.required_ruby_version = '>= 1.9.3'
 end

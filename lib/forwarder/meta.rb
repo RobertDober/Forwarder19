@@ -32,10 +32,11 @@ module Forwarder
       a = arguments
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
-          args = a.before.(*args) if a.before?
+          args = instance_exec( *args, &a.before ) if a.before?
+
           a.object_target( self )
             .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |
-              break a.after.( result ) if a.after?
+              break instance_exec( result, &a.after ) if a.after?
             end
         end
       end
@@ -49,11 +50,11 @@ module Forwarder
       sr = symbolic_receiver
       forwardee.module_eval do
         define_method a.message do |*args, &blk|
-          args = a.before.(*args) if a.before?
+          args = instance_exec( *args, &a.before ) if a.before?
           sr
             .( self, a.target )
             .send( a.translation( a.message ), *a.complete_args(*args), &a.lambda( blk ) ).tap do | result |
-              break a.after.( result ) if a.after?
+              break instance_exec( result, &a.after ) if a.after?
             end
         end
       end
